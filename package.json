@@ -1,0 +1,23 @@
+{
+  "name": "zibase",
+  "version": "1.0.0",
+  "description": "NodeJS API to ZiBase",
+  "main": "zibase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bchabrier/zibase.git"
+  },
+  "keywords": [
+    "zibase",
+    "zapi"
+  ],
+  "author": "Bruno Chabrier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bchabrier/zibase/issues"
+  },
+  "homepage": "https://github.com/bchabrier/zibase#readme"
+}
