@@ -1,3 +1,6 @@
+//heaviliy inpspired from Benjamin Garel's PHP SDK, located in
+// http://bgarel.free.fr/Zibase/
+
 var http = require("http");
 var request = require("request");
 var net = require("net");
@@ -19,7 +22,7 @@ var ZbProtocol = new function () {
     this.PRESET = 0;
     this.VISONIC433 = 1;
     this.VISONIC868 = 2;
-    this.CHACON = 3;
+    this.CHACON = 3; 
     this.DOMIA = 4;
     this.X10 = 5;
     this.ZWAVE = 6;
