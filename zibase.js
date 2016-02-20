@@ -385,8 +385,8 @@ ZiBase.prototype.processZiBaseData = function(response) {
 		logger.trace(match);
 		infos.id = match[3];
 		infos.value = "ERR";
-		logger.error(infos);
-		logger.error(match);
+		logger.debug(infos);
+		logger.debug(match);
 		logger.info(replaceid(this, 
 				      response.message, 
 				      match[0], // entire string
@@ -400,11 +400,8 @@ ZiBase.prototype.processZiBaseData = function(response) {
 		logger.info(response.message);
 	    }
 	    
-	    logger.error("infos=", infos)
 	    if (infos.id != undefined) {
-		logger.error(infos.id, infos)
 		this.emitEvent("error", infos.id, infos)
-		logger.error("after emitEvent")
 	    }
 	}
 	// Completed SCENARIO: 45
@@ -666,7 +663,7 @@ ZiBase.prototype.getVariable = function(numVar, callback) {
     request.param4 = numVar;
 
     this.sendRequest(request, true, function(err, response) {
-	logger.info("getVariable", numVar, "=> err=", err, "value=", (response != null) ? response.param1 : null);
+	logger.debug("getVariable", numVar, "=> err=", err, "value=", (response != null) ? response.param1 : null);
 	callback(err, (response != null) ? response.param1 : null);
     });
 
@@ -696,7 +693,7 @@ ZiBase.prototype.registerListener = function(port) {
  * Désenregistre une machine en tant qu'écouteur
  */
 ZiBase.prototype.deregisterListener = function() {
-    logger.info("deregisterListener", this.myip, this.localport);
+    logger.debug("deregisterListener", this.myip, this.localport);
     this.deregistered = true;
     if (this.socket != undefined) {
 	this.socket.close();
@@ -865,7 +862,7 @@ ZiBase.prototype.listenToZiBase = function(processDataMethod) {
 
     socket.on("listening", function() {
 	var address = socket.address();
-	logger.info("socket listening from listenZiBase: " + address.port);
+	logger.debug("socket listening on: " + address.port);
 
 	if (self.deregistered == false) {
 	    self.registerListener(address.port);
