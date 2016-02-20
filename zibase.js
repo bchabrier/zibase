@@ -751,14 +751,14 @@ ZiBase.prototype.getState = function(address, callback) {
     }
 
 };
-/*
+
 ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
 
     var typeSensor = idSensor.substring(0, 2);
     var numberSensor = idSensor.substring(2, 10000);
     var zibaseIP = this.ip;
 
-    require("./http_plus").getAndFollow("http://" + zibaseIP + "/sensors.xml", function(bodyString, statusCode) {
+    request.get("http://" + zibaseIP + "/sensors.xml", function(err, bodyString, statusCode) {
 	var re = new RegExp('<ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
 
 	var match;
@@ -807,7 +807,7 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
 
     });
 };
-*/
+
 function ip2long(IP) {
     // http://kevin.vanzonneveld.net
     // +   original by: Waldo Malqui Silva
