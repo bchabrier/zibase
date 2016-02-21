@@ -114,7 +114,6 @@ Zibase.getVariable(10, function(err, value) {
         console.log(err);
     console.log("V10=" + value);
 });
-
 ```
 
 Events
@@ -151,7 +150,7 @@ will produce the following output:
 Deconnexion
 -----------
 
-When no more interaction with the Zibase is needed, it is recommended to deconnect from it thanks to `deregisterListener`.
+When no more interaction with the Zibase is needed, it is recommended to deconnect from it thanks to `deregisterListener()`.
 
 ```javascript
 Zibase.deregisterListener();
