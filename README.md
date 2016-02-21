@@ -122,7 +122,7 @@ Events
 
 The activity of the Zibase is logged through [tracer](https://www.npmjs.com/package/tracer/) messages:
 ```
-21/02/2016 06:27:08.501 <info> zibase.js:350 (ZiBase.processZiBaseData) Received radio ID (<rf>ZWAVE ZB10 (RegardPiscine)</rf> <dev>Temp-Hygro</dev> Ch=<ch>3</ch> T=<tem>+5.9</tem>C (+42.6F)  Batt=<bat>Ok</bat>): <id>OS439157539 (Piscine)</id>
+21/02/2016 22:00:48.955 <info> zibase.js:352 (ZiBase.processZiBaseData) Received radio ID (<rf>ZWAVE ZB5</rf> <dev>Low-Power Measure</dev> Total Energy=<kwh>121.4</kwh>kWh Power=<w>00</w>W Batt=<bat>Ok</bat>): <id>PZB5</id>
 ```
 The `ZiBase` object is an event emitter that can call registered callbacks when receiving a given activity message. The supported events are:
 
@@ -133,9 +133,9 @@ Listening to events is done with `on(event, id, callback)`, or `once(event, id, 
 
 The following code:
 ```javascript
-   demoZibase.on('change', "PZB5", function(msg){
-        console.log(msg);
-    });
+demoZibase.on('change', "PZB5", function(msg){
+     console.log(msg);
+});
 ```
 will produce the following output:
 ```
@@ -154,7 +154,7 @@ Deconnexion
 When no more interaction with the Zibase is needed, it is recommended to deconnect from it thanks to `deregisterListener`.
 
 ```javascript
-   Zibase.deregisterListener();
+Zibase.deregisterListener();
 ```
 
 The effect of this call is to ask the Zibase to stop sending its information. It seems the Zibase can keep track of 4 clients only. When a fifth client is registered, it will replace the oldest one, hence causing a forced deregistration of the first client. When using a single client, it usually not a problem to not call `deregisterListener()`. However, when using several clients connected to a single Zibase, it is highly recommended to make the call, to avoid the others from being disconnected. A good practice is to use the following code:
