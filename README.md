@@ -61,7 +61,7 @@ The descriptors of the Zibase are loaded when the `ZiBase` class is instanciated
 
  - the `ZiBase.descriptors` member:
 ```javascript
-console.log(zibase.descriptors);
+console.log(Zibase.descriptors);
 ```
 will produce:
 ```
@@ -93,7 +93,7 @@ will produce:
 ```
  - the `ZiBase.getDescriptor(id)` method:
 ```javascript
-console.log(zibase.getDescriptor("P7"));
+console.log(Zibase.getDescriptor("P7"));
 ```
 will produce:
 ```
@@ -109,7 +109,7 @@ Variables
 ---------
 The variables `V0` to `V31` can be read through  `ZiBase.getvariable`:
 ```javascript
-zibase.getVariable(10, function(err, value) {
+Zibase.getVariable(10, function(err, value) {
     if (err)
         console.log(err);
     console.log("V10=" + value);
@@ -133,7 +133,7 @@ Listening to events is done with `on(event, id, callback)`, or `once(event, id, 
 
 The following code:
 ```javascript
-demoZibase.on('change', "PZB5", function(msg){
+Zibase.on('change', "PZB5", function(msg){
      console.log(msg);
 });
 ```
@@ -160,7 +160,7 @@ Zibase.deregisterListener();
 The effect of this call is to ask the Zibase to stop sending its information. It seems the Zibase can keep track of 4 clients only. When a fifth client is registered, it will replace the oldest one, hence causing a forced deregistration of the first client. When using a single client, it usually not a problem to not call `deregisterListener()`. However, when using several clients connected to a single Zibase, it is highly recommended to make the call, to avoid the others from being disconnected. A good practice is to use the following code:
 ```javascript
 function exitHandler() {
-    demoZibase.deregisterListener();
+    Zibase.deregisterListener();
     console.log("Deregistered from Zibase.");
 }
 
