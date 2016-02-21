@@ -61,7 +61,7 @@ The descriptors of the Zibase are loaded when the `ZiBase` class is instanciated
 
  - the `ZiBase.descriptors` member:
 ```javascript
-     console.log(zibase.descriptors);
+console.log(zibase.descriptors);
 ```
 will produce:
 ```
@@ -93,7 +93,7 @@ will produce:
 ```
  - the `ZiBase.getDescriptor(id)` method:
 ```javascript
-    console.log(zibase.getDescriptor("P7"));
+console.log(zibase.getDescriptor("P7"));
 ```
 will produce:
 ```
