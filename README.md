@@ -6,7 +6,7 @@ A NodeJS API to ZiBase
 Introduction
 ------------
 
-This module is a SDK to connect to a Zibase. Most of it should be working fine, as it is currently used in a real home installation. However, it has been tested so far only against a [Zibase Classic](http://www.zodianet.com/en/toolbox-zibase/zibase-classic.html).
+This module is a SDK to connect to a Zibase. Most of it should be working fine, as it is currently used in a real home automation installation. However, it has been tested so far only against a [Zibase Classic](http://www.zodianet.com/en/toolbox-zibase/zibase-classic.html).
 
 This SDK is strongly inspired from the [PHP SDK](http://bgarel.free.fr/Zibase/) written by Benjamin Garel.
 
