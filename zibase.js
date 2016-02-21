@@ -183,7 +183,7 @@ function ZbResponse(buffer) {
  * @param string $deviceId Device de la zibase
  * @param string $token Token de la zibase
  */
-function ZiBase(ipAddr, deviceId, token) {
+function ZiBase(ipAddr, deviceId, token, callback) {
 
     this.ip = ipAddr;
     this.port = 49999;
@@ -203,6 +203,8 @@ function ZiBase(ipAddr, deviceId, token) {
     var self = this;
     this.loadDescriptors(function(err) {
 	self.listenToZiBase(self.processZiBaseData);
+	if (callback != null) 
+	    callback();
     });
 }
 
