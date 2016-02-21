@@ -680,7 +680,7 @@ ZiBase.prototype.registerListener = function(port) {
     this.localport = port;
     var ip = this.myip;
 
-    logger.info("registerListener", ip, port);
+    logger.debug("registerListener", ip, port);
 
     var request = new ZbRequest();
     request.command = 13;
