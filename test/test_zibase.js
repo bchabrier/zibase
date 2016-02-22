@@ -66,8 +66,11 @@ describe('Module zibase', function() {
 		    "device=" + ziBase.deviceId + 
 		    "&token=" + ziBase.token,
 		function(err, res, bodyString) {
-		    demoXML = bodyString;
-		    done();
+		    if (err)
+			console.log(err);
+		    else
+			demoXML = bodyString;
+		    done(err);
 		}
 	    );
 	});
