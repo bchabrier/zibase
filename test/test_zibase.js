@@ -4,36 +4,48 @@ var zibase = require("../zibase.js");
 
 describe('Module zibase', function() {
 
+    var ziBase;
+    function releasePreviousZibase() {
+	if (ziBase != undefined) {
+	    ziBase.deregisterListener();
+	}
+    }
+
     function initFakeZibase () {
+	releasePreviousZibase();
+
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
-	var ziBase = {
+	var _ziBase = {
 	    deviceId : "ZiBASE005748",
 	    token : "1821ffcf5a",
 	};
-	ziBase.emitEvent = function () {};
-	ziBase.loadDescriptors = zibase.ZiBase.prototype.loadDescriptors;
-	ziBase.getDescriptor = zibase.ZiBase.prototype.getDescriptor;
-	ziBase.processZiBaseData = zibase.ZiBase.prototype.processZiBaseData;
+	_ziBase.emitEvent = function () {};
+	_ziBase.loadDescriptors = zibase.ZiBase.prototype.loadDescriptors;
+	_ziBase.getDescriptor = zibase.ZiBase.prototype.getDescriptor;
+	_ziBase.processZiBaseData = zibase.ZiBase.prototype.processZiBaseData;
 
-	return ziBase;
+	return _ziBase;
     }
 
     function initDemoZibase () {
+	releasePreviousZibase();
+
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
-	var ziBase = new zibase.ZiBase("", 
+	var _ziBase = new zibase.ZiBase("", 
 				       "ZiBASE005748",
 				       "1821ffcf5a"
 				      );
 
-	return ziBase;
+	return _ziBase;
     }
 
+    after("Release the demo zibase", releasePreviousZibase);
+
     describe('#loadDescriptors(cb)', function () {
-	var ziBase;
 	var demoXML = "";
 	var expectedDemoXML = '<?xml version="1.0" encoding="UTF-8"?>\n\t\t<r><start/><e t="receiverXDom" i="logotype_airfan.png" c="C3" ><n>Ventilation SdB</n></e><e t="power" i="logotype_power.png" c="PZA3" ><n>Conso Wall Plug</n></e><e t="receiverXDom" i="logotype_heatpomp.png" c="P7" p="5" ><n>Pompe à Chaleur</n></e><e t="receiverXDom" i="logotype_boiler.png" c="P5" p="5" ><n>Chaudière</n></e><e t="receiverXDom" i="logotype_PorteGarage.png" c="P4" p="5" ><n>Garage</n></e><e t="receiverXDom" i="logotype_Portails.png" c="P3" p="5" ><n>Portail</n></e><e t="receiverXDom" i="logotype_VoletsRoulants.png" c="P2" p="5" o1="MONTEE" o2="DESCENTE" o3="" ><n>Volets Salon</n></e><e t="receiverXDom" i="logotype_Arrosage.png" c="P1" p="5" ><n>Arrosage</n></e><e t="transmitter" i="logotype_Presence.png" c="VS614725410" ><n>Intrusion</n></e><e t="transmitter" i="logotype_Fumee.png" c="XS3643391298" ><n>Incendie</n></e><e t="transmitter" i="logotype_Portes.png" c="XS1234" ><n>Véranda ouverte</n></e><e t="transmitter" i="logotype_Gaz.png" c="XS3643391553" ><n>fuite de gaz cuisine</n></e><e t="transmitter" i="logotype_Eau.png" c="XS3643390788" ><n>Fuite Eau</n></e><e t="receiverXDom" i="logotype_LampesPlafond.png" c="O3" ><n>Plafonnier</n></e><e t="receiverXDom" i="logotype_LampesMurales.png" c="O1" ><n>Lampe murale</n></e><e t="transmitter" i="logotype_Portes.png" c="VS1961418098" ><n>Porte principale</n></e><e t="temperature" i="logotype_temperature.png" c="OS439156737" ><n>Salon</n></e><e t="power" i="logotype_general_yellow.png" c="WS131149" ><n>Conso au compteur</n></e><m id="9" icon="logoMacro_Portes.png" ><n>simulation intrusion</n></m><m id="16" icon="logoMacro_Scenario.png" ><n>Notification iOS</n></m><m id="17" icon="logoMacro_Presence.png" ><n>Notif Android1</n></m><m id="18" icon="logoMacro_General.png" ><n>Notif Android2</n></m><thermostat1 data="Thermostat:1:0:0:15:17:16:1:0:1:3:12"/><end/></r>';
 	var nbDescriptors = (expectedDemoXML.match(/<n>/g) || []).length;
@@ -167,6 +179,7 @@ describe('Module zibase', function() {
     describe('#riptors(cb)', function () {
     	this.timeout(20000);
 	it('asdfadfd', function (done) {
+	    releasePreviousZibase();
 	    var ziBase = new zibase.ZiBase("192.168.0.15", 
 				    "whatever id",
 				    "whatever token");
@@ -175,7 +188,6 @@ describe('Module zibase', function() {
 		else {
 		    console.log(value);
 		}
-	//	ziBase.deregisterListener();
 		ziBase.deregisterListener();
 		done();
 	    });
@@ -206,7 +218,20 @@ describe('Module zibase', function() {
 	}
 	this.timeout(10000);
 	it('should run demoZibase successfully', function(done) {
+	    var fs = require('fs');
+	    fs.stat(exampleDir, function(err, stats) {
+		if (err) {
+		    console.log(err);
+		    done();
+		} else {
+		    if (stats.isDirectory()) {
 			runExample("demoZibase", done);
+		    } else {
+			console.log("Cannot find directory '" + exampleDir + ". Skipping test.");
+			done();
+		    }
+		}
+	    });
 	});
     });
 
