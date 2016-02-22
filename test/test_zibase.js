@@ -188,11 +188,13 @@ describe('Module zibase', function() {
     });
 
     describe('Run examples', function() {
+	var exampleDir = "../zibase_examples";
+
 	function runExample(example, done) {
 	    var child_process = require("child_process");
 	    child_process.exec("node " + example,
 			       {
-				   cwd : "../zibase_examples",
+				   cwd : exampleDir,
 				   timeout : 7000,
 				   killSignal : 'SIGTERM'
 			       },
@@ -204,7 +206,7 @@ describe('Module zibase', function() {
 	}
 	this.timeout(10000);
 	it('should run demoZibase successfully', function(done) {
-	    done();//runExample("demoZibase", done);
+			runExample("demoZibase", done);
 	});
     });
 
