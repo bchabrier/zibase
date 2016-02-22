@@ -4,7 +4,7 @@
   "description": "A NodeJS API to ZiBase",
   "main": "zibase.js",
   "scripts": {
-    "test": "mocha test",
+    "test": "mocha",
     "cover": "istanbul cover _mocha"
   },
   "repository": {
