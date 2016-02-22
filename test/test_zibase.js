@@ -165,7 +165,7 @@ describe('Module zibase', function() {
     });
 
     describe('#riptors(cb)', function () {
-    	this.timeout(10000);
+    	this.timeout(20000);
 	it('asdfadfd', function (done) {
 	    var ziBase = new zibase.ZiBase("192.168.0.15", 
 				    "whatever id",
