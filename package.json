@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/bchabrier/zibase#readme",
   "dependencies": {
+    "mocha": "*",
     "request": "*",
     "tracer": "*",
     "ip": "*"
