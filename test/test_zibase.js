@@ -104,7 +104,6 @@ describe('Module zibase', function() {
 		}
 	    }
 	});
-	after("Release the demo zibase", releasePreviousZibase);
     });
 
     describe('#getDescriptor(id)', function () {
@@ -174,7 +173,6 @@ describe('Module zibase', function() {
 	    ziBase.processZiBaseData(response);
 	    assert.equal(zibase.test_logger_data.message, response.message.replace(/ P4/g, " P4 (Garage)"));
 	});
-	after("Release the demo zibase", releasePreviousZibase);
     });
 
     describe('#getVariable(var, cb)', function () {
