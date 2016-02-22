@@ -6,7 +6,7 @@ describe('Module zibase', function() {
 
     var ziBase;
     function releasePreviousZibase() {
-	if (ziBase != undefined && ziBase.deregisterListener != undefined) {
+	if (ziBase != undefined && ziBase.localPort != undefined && ziBase.deregisterListener != undefined) {
 	    ziBase.deregisterListener();
 	    ziBase = undefined;
 	}
@@ -40,7 +40,7 @@ describe('Module zibase', function() {
 	return _ziBase;
     }
 
-    afterEach("Release the demo zibase", releasePreviousZibase);
+    afterEach("Release the zibase", releasePreviousZibase);
 
     describe('#loadDescriptors(cb)', function () {
 	var demoXML = "";
