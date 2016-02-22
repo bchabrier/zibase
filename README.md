@@ -33,7 +33,7 @@ var zibase=require('zibase');
 Connection to a Zibase
 ----------------------
 
-In order to communicate with a Zibase it is necessary to connect to a given Zibase. For this, the IP address `zibaseIP` and the credentials  `deviceId` and `token` of the Zibase are needed.
+In order to communicate with a Zibase it is necessary to connect to it by instanciating the `ZiBase` class. For this, the IP address `zibaseIP` and the credentials  `deviceId` and `token` of the Zibase are needed.
 
 ```javascript
 var Zibase = new zibase.ZiBase(
