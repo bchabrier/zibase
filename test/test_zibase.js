@@ -6,8 +6,9 @@ describe('Module zibase', function() {
 
     var ziBase;
     function releasePreviousZibase() {
-	if (ziBase != undefined && zibase.deregisterListener != undefined) {
+	if (ziBase != undefined && ziBase.deregisterListener != undefined) {
 	    ziBase.deregisterListener();
+	    ziBase = undefined;
 	}
     }
 
@@ -39,13 +40,13 @@ describe('Module zibase', function() {
 	return _ziBase;
     }
 
-    after("Release the demo zibase", releasePreviousZibase);
+    afterEach("Release the demo zibase", releasePreviousZibase);
 
     describe('#loadDescriptors(cb)', function () {
 	var demoXML = "";
 	var expectedDemoXML = '<?xml version="1.0" encoding="UTF-8"?>\n\t\t<r><start/><e t="receiverXDom" i="logotype_airfan.png" c="C3" ><n>Ventilation SdB</n></e><e t="power" i="logotype_power.png" c="PZA3" ><n>Conso Wall Plug</n></e><e t="receiverXDom" i="logotype_heatpomp.png" c="P7" p="5" ><n>Pompe à Chaleur</n></e><e t="receiverXDom" i="logotype_boiler.png" c="P5" p="5" ><n>Chaudière</n></e><e t="receiverXDom" i="logotype_PorteGarage.png" c="P4" p="5" ><n>Garage</n></e><e t="receiverXDom" i="logotype_Portails.png" c="P3" p="5" ><n>Portail</n></e><e t="receiverXDom" i="logotype_VoletsRoulants.png" c="P2" p="5" o1="MONTEE" o2="DESCENTE" o3="" ><n>Volets Salon</n></e><e t="receiverXDom" i="logotype_Arrosage.png" c="P1" p="5" ><n>Arrosage</n></e><e t="transmitter" i="logotype_Presence.png" c="VS614725410" ><n>Intrusion</n></e><e t="transmitter" i="logotype_Fumee.png" c="XS3643391298" ><n>Incendie</n></e><e t="transmitter" i="logotype_Portes.png" c="XS1234" ><n>Véranda ouverte</n></e><e t="transmitter" i="logotype_Gaz.png" c="XS3643391553" ><n>fuite de gaz cuisine</n></e><e t="transmitter" i="logotype_Eau.png" c="XS3643390788" ><n>Fuite Eau</n></e><e t="receiverXDom" i="logotype_LampesPlafond.png" c="O3" ><n>Plafonnier</n></e><e t="receiverXDom" i="logotype_LampesMurales.png" c="O1" ><n>Lampe murale</n></e><e t="transmitter" i="logotype_Portes.png" c="VS1961418098" ><n>Porte principale</n></e><e t="temperature" i="logotype_temperature.png" c="OS439156737" ><n>Salon</n></e><e t="power" i="logotype_general_yellow.png" c="WS131149" ><n>Conso au compteur</n></e><m id="9" icon="logoMacro_Portes.png" ><n>simulation intrusion</n></m><m id="16" icon="logoMacro_Scenario.png" ><n>Notification iOS</n></m><m id="17" icon="logoMacro_Presence.png" ><n>Notif Android1</n></m><m id="18" icon="logoMacro_General.png" ><n>Notif Android2</n></m><thermostat1 data="Thermostat:1:0:0:15:17:16:1:0:1:3:12"/><end/></r>';
 	var nbDescriptors = (expectedDemoXML.match(/<n>/g) || []).length;
-	before("Initialize the demo zibase", function () {
+	beforeEach("Initialize the demo zibase", function () {
 	    // use the demo zibase
 	    ziBase = initDemoZibase();
 	});
@@ -58,7 +59,7 @@ describe('Module zibase', function() {
 	    });
 	});
 */
-	before("Initialize demo XML", function (done) {
+	beforeEach("Initialize demo XML", function (done) {
 	    this.timeout(10000);
 	    request.get(
 		"https://zibase.net/m/get_xml.php?" +
@@ -107,11 +108,11 @@ describe('Module zibase', function() {
     });
 
     describe('#getDescriptor(id)', function () {
-	before("Initialize a fake zibase", function () {
+	beforeEach("Initialize a fake zibase", function () {
 	    // fake a zibase
 	    ziBase = initFakeZibase();
 	});
-	before("Load zibase descriptors", function (done) {
+	beforeEach("Load zibase descriptors", function (done) {
 	    ziBase.loadDescriptors(function (err) {
 		assert.equal(err, null);
 		done(err);
@@ -131,14 +132,13 @@ describe('Module zibase', function() {
 
 	    assert.equal(desc, undefined);
 	});
-	after("Release the demo zibase", releasePreviousZibase);
     });
     describe('#processZibaseData(response)', function () {
-	before("Initialize a fake zibase", function () {
+	beforeEach("Initialize a fake zibase", function () {
 	    // fake a zibase
 	    ziBase = initFakeZibase();
 	});
-	before("Load zibase descriptors", function (done) {
+	beforeEach("Load zibase descriptors", function (done) {
 	    ziBase.loadDescriptors(function (err) {
 		assert.equal(err, null);
 		done(err);
