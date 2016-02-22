@@ -6,9 +6,8 @@ describe('Module zibase', function() {
 
     var ziBase;
     function releasePreviousZibase() {
-	if (ziBase != undefined) {
+	if (ziBase != undefined && zibase.deregisterListener != undefined) {
 	    ziBase.deregisterListener();
-	    ziBase = undefined;
 	}
     }
 
@@ -40,7 +39,7 @@ describe('Module zibase', function() {
 	return _ziBase;
     }
 
-    afterEach("Release the demo zibase", releasePreviousZibase);
+    after("Release the demo zibase", releasePreviousZibase);
 
     describe('#loadDescriptors(cb)', function () {
 	var demoXML = "";
@@ -50,9 +49,7 @@ describe('Module zibase', function() {
 	    // use the demo zibase
 	    ziBase = initDemoZibase();
 	});
-	after("Release the demo zibase", function () {
-	    ziBase.deregisterListener();
-	});
+
 /*
 	before("Load zibase descriptors", function (done) {
 	    ziBase.loadDescriptors(function (err) {
@@ -106,10 +103,10 @@ describe('Module zibase', function() {
 		}
 	    }
 	});
+	after("Release the demo zibase", releasePreviousZibase);
     });
 
     describe('#getDescriptor(id)', function () {
-	var ziBase;
 	before("Initialize a fake zibase", function () {
 	    // fake a zibase
 	    ziBase = initFakeZibase();
@@ -134,9 +131,9 @@ describe('Module zibase', function() {
 
 	    assert.equal(desc, undefined);
 	});
+	after("Release the demo zibase", releasePreviousZibase);
     });
     describe('#processZibaseData(response)', function () {
-	var ziBase;
 	before("Initialize a fake zibase", function () {
 	    // fake a zibase
 	    ziBase = initFakeZibase();
@@ -171,13 +168,14 @@ describe('Module zibase', function() {
 	    }
 	    ziBase.processZiBaseData(response);
 	});
+	after("Release the demo zibase", releasePreviousZibase);
     });
 
     describe('#riptors(cb)', function () {
     	this.timeout(20000);
-	it('asdfadfd', function (done) {
+	it.skip('asdfadfd', function (done) {
 	    releasePreviousZibase();
-	    var ziBase = new zibase.ZiBase("192.168.0.15", 
+	    ziBase = new zibase.ZiBase("192.168.0.15", 
 				    "whatever id",
 				    "whatever token");
 	    ziBase.getVariable(16, function(err, value) {
@@ -194,6 +192,7 @@ describe('Module zibase', function() {
 	    }
 //	    setTimeout(dereg, 6000);
 	});
+	after("Release the demo zibase", releasePreviousZibase);
     });
 
     describe('Run examples', function() {
