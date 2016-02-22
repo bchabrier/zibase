@@ -67,7 +67,7 @@ describe('Module zibase', function() {
 		    "&token=" + ziBase.token,
 		function(err, res, bodyString) {
 		    if (err)
-			console.log(err);
+			console.log("error", err);
 		    else
 			demoXML = bodyString;
 		    done(err);
