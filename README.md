@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/bchabrier/zibase.svg?branch=master)](https://travis-ci.org/bchabrier/zibase)
+[![NPM version](http://img.shields.io/npm/v/zibase.svg)](https://www.npmjs.org/package/zibase)
+[![Coverage Status](https://coveralls.io/repos/bchabrier/zibase/badge.svg?branch=master)](https://coveralls.io/r/bchabrier/zibase?branch=master)
 zibase
 ======
 
