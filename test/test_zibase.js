@@ -177,28 +177,33 @@ describe('Module zibase', function() {
 	after("Release the demo zibase", releasePreviousZibase);
     });
 
-    describe('#riptors(cb)', function () {
-    	this.timeout(20000);
-	it.skip('asdfadfd', function (done) {
-	    releasePreviousZibase();
+    describe('#getVariable(var, cb)', function () {
+	it('should return an int value', function (done) {
+	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase("192.168.0.15", 
 				    "whatever id",
 				    "whatever token");
 	    ziBase.getVariable(16, function(err, value) {
-		if (err) throw err;
+		if (err) 
+		    done(err);
 		else {
-		    console.log(value);
+		    assert.equal(typeof value, 'number');
+		    done();
 		}
-		ziBase.deregisterListener();
-		done();
 	    });
-	    function dereg () {
-		ziBase.deregisterListener();
-		done();
-	    }
-//	    setTimeout(dereg, 6000);
 	});
-	after("Release the demo zibase", releasePreviousZibase);
+	it('should return an error if not reachable', function (done) {
+	    this.timeout(20000);
+	    ziBase = new zibase.ZiBase("1.1.1.1", 
+				    "whatever id",
+				    "whatever token");
+	    ziBase.getVariable(16, function(err, value) {
+		if (err) 
+		    done();
+		else 
+		done("Error not thrown");
+	    });
+	});
     });
 
     describe('Run examples', function() {
