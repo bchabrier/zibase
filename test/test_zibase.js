@@ -8,6 +8,7 @@ describe('Module zibase', function() {
     function releasePreviousZibase() {
 	if (ziBase != undefined) {
 	    ziBase.deregisterListener();
+	    ziBase = undefined;
 	}
     }
 
