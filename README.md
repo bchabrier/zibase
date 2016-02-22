@@ -107,7 +107,7 @@ will produce:
 
 Variables
 ---------
-The variables `V0` to `V31` can be read through  `ZiBase.getvariable`:
+The variables `V0` to `V31` can be read through  `ZiBase.getVariable`:
 ```javascript
 Zibase.getVariable(10, function(err, value) {
     if (err)
