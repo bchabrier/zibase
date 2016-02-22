@@ -184,7 +184,7 @@ describe('Module zibase', function() {
 				    "whatever id",
 				    "whatever token");
 	    ziBase.getVariable(16, function(err, value) {
-		if (err) console.log(err);
+		if (err) throw err;
 		else {
 		    console.log(value);
 		}
@@ -219,19 +219,20 @@ describe('Module zibase', function() {
 	this.timeout(10000);
 	it('should run demoZibase successfully', function(done) {
 	    var fs = require('fs');
-	    fs.stat(exampleDir, function(err, stats) {
-		if (err) {
-		    console.log(err);
-		    done();
-		} else {
-		    if (stats.isDirectory()) {
-			runExample("demoZibase", done);
-		    } else {
-			console.log("Cannot find directory '" + exampleDir + ". Skipping test.");
+	    try {
+		fs.stat(exampleDir, function(err, stats) {
+		    if (err) {
+			console.log("Cannot find example directory '" + exampleDir + "'. Skipping...");
 			done();
+		    } else {
+			if (stats.isDirectory()) {
+			    runExample("demoZibase", done);
+			} else {
+			    done();
+			}
 		    }
-		}
-	    });
+		});
+	    } catch(e) {}
 	});
     });
 
