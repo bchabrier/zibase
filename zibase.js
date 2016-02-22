@@ -11,6 +11,12 @@ var events = require("events");
 var assert = require("assert");
 
 var logger = require("tracer").colorConsole({
+    transport : function (data) {
+	console.log(data.output);
+	if (exports.test_logger == true) {
+	    exports.test_logger_data = data;
+	}
+    },
     dateformat : "dd/mm/yyyy HH:MM:ss.l",
     level : 3 //0:'test', 1:'trace', 2:'debug', 3:'info', 4:'warn', 5:'error'
 });

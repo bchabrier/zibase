@@ -150,7 +150,9 @@ describe('Module zibase', function() {
 		message : "ZWave warning: ERR_P4"
 
 	    }
+	    zibase.test_logger = true;
 	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
 	});
 	it('should replace id_OFF by id_OFF (name) in response', function () {
 	    var response = {
@@ -158,7 +160,9 @@ describe('Module zibase', function() {
 		message : "Sent radio ID (1 Burst(s), Protocols='Family http' ): P4_OFF"
 
 	    }
+	    zibase.test_logger = true;
 	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
 	});
 	it('should replace <rf>ZWAVE id<rf> by name id (name) in response', function () {
 	    var response = {
@@ -166,7 +170,9 @@ describe('Module zibase', function() {
 		message : "Received radio ID (<rf>ZWAVE P4</rf> <dev>Low-Power Measure</dev> Total Energy=<kwh>39.8</kwh>kWh Power=<w>00</w>W Batt=<bat>Ok</bat>): <id>PZP4</id>"
 
 	    }
+	    zibase.test_logger = true;
 	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message.replace(/ P4/g, " P4 (Garage)"));
 	});
 	after("Release the demo zibase", releasePreviousZibase);
     });
