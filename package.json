@@ -4,7 +4,8 @@
   "description": "A NodeJS API to ZiBase",
   "main": "zibase.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "cover": "istanbul cover _mocha"
   },
   "repository": {
     "type": "git",
@@ -21,9 +22,12 @@
   },
   "homepage": "https://github.com/bchabrier/zibase#readme",
   "dependencies": {
-    "mocha": "*",
     "request": "*",
     "tracer": "*",
     "ip": "*"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5"
   }
 }
