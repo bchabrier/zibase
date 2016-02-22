@@ -234,7 +234,9 @@ describe('Module zibase', function() {
 			}
 		    }
 		});
-	    } catch(e) {}
+	    } catch(e) {
+		throw e;
+	    }
 	});
     });
 
