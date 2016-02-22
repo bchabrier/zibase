@@ -12,8 +12,6 @@ describe('Module zibase', function() {
     }
 
     function initFakeZibase () {
-	releasePreviousZibase();
-
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
@@ -30,8 +28,6 @@ describe('Module zibase', function() {
     }
 
     function initDemoZibase () {
-	releasePreviousZibase();
-
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
@@ -43,7 +39,7 @@ describe('Module zibase', function() {
 	return _ziBase;
     }
 
-    after("Release the demo zibase", releasePreviousZibase);
+    afterEach("Release the demo zibase", releasePreviousZibase);
 
     describe('#loadDescriptors(cb)', function () {
 	var demoXML = "";
