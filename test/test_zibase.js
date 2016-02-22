@@ -74,7 +74,7 @@ describe('Module zibase', function() {
 	    // do some formatting to ease the diff
 	    // presentation by mocha, if needed
 	    var fDemoXML = demoXML.replace(/>/g,'>\n');
-	    var fExpectedDemoXML = expectedDemoXML.replace(/>/g,'>\n');;
+	    var fExpectedDemoXML = expectedDemoXML.replace(/>/g,'>\n');
 	    assert.equal(fDemoXML, fExpectedDemoXML);
 	});
 	it('should create ' + nbDescriptors + ' descriptors', function () {
