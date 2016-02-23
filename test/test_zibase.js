@@ -206,7 +206,7 @@ describe('Module zibase', function() {
 		if (err) 
 		    done();
 		else 
-		done("Error not thrown");
+		    done("Error not thrown");
 	    });
 	});
     });
@@ -237,7 +237,7 @@ describe('Module zibase', function() {
 		if (err) 
 		    done();
 		else 
-		done("Error not thrown");
+		    done("Error not thrown");
 	    });
 	});
     });
