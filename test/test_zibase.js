@@ -10,9 +10,13 @@ describe('Module zibase', function() {
 
     before("Checking valid Zibase", function(done) {
 	this.timeout(5000);
-	request.get("http://" + validZibaseIP + "/sensors.xml", {timeout: 2000}, function(err, response, bodyString) {
+	request.get("http://" + validZibaseIP + "/sensors.xml", 
+		    {timeout: 2000}, 
+		    function(err, response, bodyString) {
 	    if (err || bodyString == undefined) {
-		console.log("Valid Zibase '" + validZibaseIP + "' unreachable. Some tests will be skipped.");
+		console.log("Valid Zibase '" 
+			    + validZibaseIP 
+			    + "' unreachable. Some tests will be skipped.");
 		validZibaseUnreachable = true;
 	    }
 	    done();
@@ -22,7 +26,10 @@ describe('Module zibase', function() {
 
     var ziBase;
     function releasePreviousZibase() {
-	if (ziBase != undefined && ziBase.localPort != undefined && ziBase.deregisterListener != undefined) {
+	if (ziBase != undefined 
+	    && ziBase.localPort != undefined 
+	    && ziBase.deregisterListener != undefined) 
+	{
 	    ziBase.deregisterListener();
 	    ziBase = undefined;
 	}
@@ -68,14 +75,6 @@ describe('Module zibase', function() {
 	    ziBase = initDemoZibase(done);
 	});
 
-/*
-	before("Load zibase descriptors", function (done) {
-	    ziBase.loadDescriptors(function (err) {
-		assert.equal(err, null);
-		done(err);
-	    });
-	});
-*/
 	beforeEach("Initialize demo XML", function (done) {
 	    this.timeout(10000);
 	    request.get(
@@ -90,6 +89,7 @@ describe('Module zibase', function() {
 		}
 	    );
 	});
+
 	it('should get a well formatted XML from the zibase', function () {
 	    // do some formatting to ease the diff
 	    // presentation by mocha, if needed
@@ -208,9 +208,7 @@ describe('Module zibase', function() {
 				    "whatever token");
 	    ziBase.getVariable(16, function(err, value) {
 		if (err) {
-		    console.log(err);
-		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    done();
+		    done(err);
 		} else {
 		    assert.equal(typeof value, 'number');
 		    done();
