@@ -750,7 +750,7 @@ ZiBase.prototype.getState = function(address, callback) {
 	    request.param4 |= 0x0100;
 
 	this.sendRequest(request, true, function(err, response) {
-	    logger.info("getState", address, "=> err=", err, "value=", (response != null) ? response.param1 : null);
+	    logger.debug("getState", address, "=> err=", err, "value=", (response != null) ? response.param1 : null);
 	    callback(err, (response != null) ? response.param1 : null);
 	});
     }
