@@ -244,9 +244,9 @@ describe('Module zibase', function() {
 	});
     });
 
-    describe.only('#getSensorInfo(var, cb)', function () {
+    describe('#getSensorInfo(var, cb)', function () {
 	it('should return two values', function (done) {
-	    this.timeout(130000);
+	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
 				    "whatever token");
@@ -266,7 +266,7 @@ describe('Module zibase', function() {
 	    });
 	});
 	it('should return an error if not reachable', function (done) {
-	    this.timeout(1300000);
+	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase("1.1.1.1", 
 				    "whatever id",
 				    "whatever token");

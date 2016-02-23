@@ -763,7 +763,7 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
     var numberSensor = idSensor.substring(2, 10000);
     var zibaseIP = this.ip;
 
-    request.get("http://" + zibaseIP + "/sensors.xml", function(err, response, bodyString) {
+    request.get("http://" + zibaseIP + "/sensors.xml", {timeout: 10000}, function(err, response, bodyString) {
 	var re = new RegExp('<ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
 	var match;
 	if (( match = re.exec(bodyString)) != undefined) {
