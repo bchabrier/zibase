@@ -308,7 +308,7 @@ describe('Module zibase', function() {
 	});
     });
 
-    describe.skip('Run examples', function() {
+    describe('Run examples', function() {
 	var exampleDir = "../zibase_examples";
 
 	function runExample(example, done) {
