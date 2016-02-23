@@ -2,9 +2,23 @@ var assert = require("assert");
 var request = require("request");
 var zibase = require("../zibase.js");
 
-var validZibaseIP = "192.168.0.155";
+var validZibaseIP = "192.168.0.15";
 
 describe('Module zibase', function() {
+
+    var validZibaseUnreachable = false;
+
+    before("Checking valid Zibase", function(done) {
+	this.timeout(5000);
+	request.get("http://" + validZibaseIP + "/sensors.xml", {timeout: 2000}, function(err, response, bodyString) {
+	    if (err || bodyString == undefined) {
+		console.log("Valid Zibase '" + validZibaseIP + "' unreachable. Some tests will be skipped.");
+		validZibaseUnreachable = true;
+	    }
+	    done();
+	});
+    });
+	    
 
     var ziBase;
     function releasePreviousZibase() {
@@ -182,6 +196,12 @@ describe('Module zibase', function() {
 
     describe('#getVariable(var, cb)', function () {
 	it('should return an int value', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
 	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
@@ -213,15 +233,19 @@ describe('Module zibase', function() {
 
     describe('#getState(var, cb)', function () {
 	it('should return an int value', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
 	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
 				    "whatever token");
 	    ziBase.getState("ZB5", function(err, value) {
 		if (err) {
-		    console.log(err);
-		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    done();
+		    done(err);
 		} else {
 		    assert.equal(typeof value, 'number');
 		    done();
@@ -250,9 +274,7 @@ describe('Module zibase', function() {
 				    "whatever token");
 	    ziBase.getSensorInfo("OS439157539", function(err, value) {
 		if (err) {
-		    console.log(err);
-		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    done();
+		    done(err);
 		} else {
 		    assert.notEqual(value, undefined);
 		    assert.equal(typeof value, 'object');
