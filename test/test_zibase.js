@@ -2,7 +2,7 @@ var assert = require("assert");
 var request = require("request");
 var zibase = require("../zibase.js");
 
-var validZibaseIP = "192.168.0.15";
+var validZibaseIP = "192.168.0.155";
 
 describe('Module zibase', function() {
 
@@ -186,12 +186,10 @@ describe('Module zibase', function() {
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
 				    "whatever token");
-	    var self=this;
 	    ziBase.getVariable(16, function(err, value) {
 		if (err) {
 		    console.log(err);
 		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    self.skip();
 		    done();
 		} else {
 		    assert.equal(typeof value, 'number');
@@ -219,12 +217,10 @@ describe('Module zibase', function() {
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
 				    "whatever token");
-	    var self=this;
 	    ziBase.getState("ZB5", function(err, value) {
 		if (err) {
 		    console.log(err);
 		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    self.skip();
 		    done();
 		} else {
 		    assert.equal(typeof value, 'number');
@@ -252,12 +248,10 @@ describe('Module zibase', function() {
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
 				    "whatever token");
-	    var self=this;
 	    ziBase.getSensorInfo("OS439157539", function(err, value) {
 		if (err) {
 		    console.log(err);
 		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
-		    self.skip();
 		    done();
 		} else {
 		    assert.notEqual(value, undefined);
