@@ -242,6 +242,40 @@ describe('Module zibase', function() {
 	});
     });
 
+    describe.only('#getSensorInfo(var, cb)', function () {
+	it('should return two values', function (done) {
+	    this.timeout(20000);
+	    ziBase = new zibase.ZiBase(validZibaseIP,
+				    "whatever id",
+				    "whatever token");
+	    ziBase.getSensorInfo("OS439157539", function(err, value) {
+		if (err) {
+		    console.log(err);
+		    console.log("Valid Zibase not reachable on '" + validZibaseIP + "'. Skipping test.");
+		    done();
+		} else {
+		    assert.notEqual(value, undefined);
+		    assert.equal(typeof value, 'object');
+		    assert.equal(typeof value.v1, 'string');
+		    assert.equal(typeof value.v2, 'string');
+		    done();
+		}
+	    });
+	});
+	it('should return an error if not reachable', function (done) {
+	    this.timeout(20000);
+	    ziBase = new zibase.ZiBase("1.1.1.1", 
+				    "whatever id",
+				    "whatever token");
+	    ziBase.getSensorInfo("OS439157539", function(err, value) {
+		if (err) 
+		    done();
+		else 
+		    done("Error not thrown");
+	    });
+	});
+    });
+
     describe.skip('Run examples', function() {
 	var exampleDir = "../zibase_examples";
 

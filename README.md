@@ -134,6 +134,17 @@ Zibase.getState("ZB5", function(err, value) {
 });
 ```
 
+Sensors
+-------
+The information about a sensor can be retrieved through  `ZiBase.getSensorInfo`:
+```javascript
+Zibase.getSensorInfo("OS439157578", function(err, value) {
+    if (err)
+        console.log(err);
+    console.log("Infos =" + value);
+});
+```
+
 Events
 ------
 
