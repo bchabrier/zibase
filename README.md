@@ -123,6 +123,17 @@ Zibase.getVariable(10, function(err, value) {
 });
 ```
 
+Devices
+-------
+The state of devices can be retrieved through  `ZiBase.getState`:
+```javascript
+Zibase.getState("ZB5", function(err, value) {
+    if (err)
+        console.log(err);
+    console.log("ZB5 state =" + value);
+});
+```
+
 Events
 ------
 
