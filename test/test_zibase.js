@@ -26,9 +26,7 @@ describe('Module zibase', function() {
 
     var ziBase;
     function releasePreviousZibase() {
-	if (ziBase != undefined 
-	    && ziBase.localPort != undefined 
-	    && ziBase.deregisterListener != undefined) 
+	if (ziBase && ziBase.localport && ziBase.deregisterListener) 
 	{
 	    ziBase.deregisterListener();
 	    ziBase = undefined;
