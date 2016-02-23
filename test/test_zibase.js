@@ -268,6 +268,12 @@ describe('Module zibase', function() {
 
     describe('#getSensorInfo(var, cb)', function () {
 	it('should return two values', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
 	    this.timeout(20000);
 	    ziBase = new zibase.ZiBase(validZibaseIP,
 				    "whatever id",
