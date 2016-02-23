@@ -24,42 +24,56 @@ describe('Module zibase', function() {
     });
 	    
 
-    var ziBase;
+    var ziBase; // singleton to have only 1 connected zibase
+
     function releasePreviousZibase() {
 	if (ziBase && ziBase.localport && ziBase.deregisterListener) 
 	{
 	    ziBase.deregisterListener();
-	    ziBase = undefined;
 	}
+	ziBase = undefined;
     }
 
     function initFakeZibase () {
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
-	var _ziBase = {
+	ziBase = {
 	    deviceId : "ZiBASE005748",
 	    token : "1821ffcf5a",
 	};
-	_ziBase.emitEvent = function () {};
-	_ziBase.loadDescriptors = zibase.ZiBase.prototype.loadDescriptors;
-	_ziBase.getDescriptor = zibase.ZiBase.prototype.getDescriptor;
-	_ziBase.processZiBaseData = zibase.ZiBase.prototype.processZiBaseData;
-
-	return _ziBase;
+	ziBase.emitEvent = function () {};
+	ziBase.loadDescriptors = zibase.ZiBase.prototype.loadDescriptors;
+	ziBase.getDescriptor = zibase.ZiBase.prototype.getDescriptor;
+	ziBase.processZiBaseData = zibase.ZiBase.prototype.processZiBaseData;
+	
     }
-
+    
     function initDemoZibase (done) {
 	// Credentials are from the demo account, 
 	// retrieved from the following URL:
 	// https://zibase.net/m/get_iphone.php?login=demo&password=demo
-	var _ziBase = new zibase.ZiBase("", 
-					"ZiBASE005748",
-					"1821ffcf5a",
-					done
-				      );
+	ziBase = new zibase.ZiBase("", 
+				    "ZiBASE005748",
+				    "1821ffcf5a",
+				    done
+				   );
+    }
 
-	return _ziBase;
+    function initValidZibase (done) {
+	ziBase = new zibase.ZiBase(validZibaseIP,
+				    "whatever id",
+				    "whatever token",
+				    done
+				   );
+    }
+
+    function initUnreachableZibase (done) {
+	ziBase = new zibase.ZiBase("1.1.1.1",
+				    "whatever id",
+				    "whatever token",
+				    done
+				   );
     }
 
     afterEach("Release the zibase", releasePreviousZibase);
@@ -70,7 +84,7 @@ describe('Module zibase', function() {
 	var nbDescriptors = (expectedDemoXML.match(/<n>/g) || []).length;
 	beforeEach("Initialize the demo zibase", function (done) {
 	    // use the demo zibase
-	    ziBase = initDemoZibase(done);
+	    initDemoZibase(done);
 	});
 
 	beforeEach("Initialize demo XML", function (done) {
@@ -126,7 +140,7 @@ describe('Module zibase', function() {
     describe('#getDescriptor(id)', function () {
 	beforeEach("Initialize a fake zibase", function () {
 	    // fake a zibase
-	    ziBase = initFakeZibase();
+	    initFakeZibase();
 	});
 	beforeEach("Load zibase descriptors", function (done) {
 	    ziBase.loadDescriptors(function (err) {
@@ -152,7 +166,7 @@ describe('Module zibase', function() {
     describe('#processZibaseData(response)', function () {
 	beforeEach("Initialize a fake zibase", function () {
 	    // fake a zibase
-	    ziBase = initFakeZibase();
+	    initFakeZibase();
 	});
 	beforeEach("Load zibase descriptors", function (done) {
 	    ziBase.loadDescriptors(function (err) {
@@ -201,28 +215,26 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase(validZibaseIP,
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getVariable(16, function(err, value) {
-		if (err) {
-		    done(err);
-		} else {
-		    assert.equal(typeof value, 'number');
-		    done();
-		}
+	    initValidZibase(function() {
+		ziBase.getVariable(16, function(err, value) {
+		    if (err) {
+			done(err);
+		    } else {
+			assert.equal(typeof value, 'number');
+			done();
+		    }
+		});
 	    });
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase("1.1.1.1", 
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getVariable(16, function(err, value) {
-		if (err) 
-		    done();
-		else 
-		    done("Error not thrown");
+	    initUnreachableZibase(function() {
+		ziBase.getVariable(16, function(err, value) {
+		    if (err) 
+			done();
+		    else 
+			done("Error not thrown");
+		});
 	    });
 	});
     });
@@ -236,28 +248,26 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase(validZibaseIP,
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getState("ZB5", function(err, value) {
-		if (err) {
-		    done(err);
-		} else {
-		    assert.equal(typeof value, 'number');
-		    done();
-		}
+	    initValidZibase(function() {
+		ziBase.getState("ZB5", function(err, value) {
+		    if (err) {
+			done(err);
+		    } else {
+			assert.equal(typeof value, 'number');
+			done();
+		    }
+		});
 	    });
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase("1.1.1.1", 
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getState("ZB5", function(err, value) {
-		if (err) 
-		    done();
-		else 
-		    done("Error not thrown");
+	    initUnreachableZibase(function() {
+		ziBase.getState("ZB5", function(err, value) {
+		    if (err) 
+			done();
+		    else 
+			done("Error not thrown");
+		});
 	    });
 	});
     });
@@ -271,31 +281,29 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase(validZibaseIP,
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getSensorInfo("OS439157539", function(err, value) {
-		if (err) {
-		    done(err);
-		} else {
-		    assert.notEqual(value, undefined);
-		    assert.equal(typeof value, 'object');
-		    assert.equal(typeof value.v1, 'string');
-		    assert.equal(typeof value.v2, 'string');
-		    done();
-		}
+	    initValidZibase(function() {
+		ziBase.getSensorInfo("OS439157539", function(err, value) {
+		    if (err) {
+			done(err);
+		    } else {
+			assert.notEqual(value, undefined);
+			assert.equal(typeof value, 'object');
+			assert.equal(typeof value.v1, 'string');
+			assert.equal(typeof value.v2, 'string');
+			done();
+		    }
+		});
 	    });
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    ziBase = new zibase.ZiBase("1.1.1.1", 
-				    "whatever id",
-				    "whatever token");
-	    ziBase.getSensorInfo("OS439157539", function(err, value) {
-		if (err) 
-		    done();
-		else 
-		    done("Error not thrown");
+	    initUnreachableZibase(function() {
+		ziBase.getSensorInfo("OS439157539", function(err, value) {
+		    if (err) 
+			done();
+		    else 
+			done("Error not thrown");
+		});
 	    });
 	});
     });
