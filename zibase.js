@@ -202,8 +202,14 @@ function ZiBase(ipAddr, deviceId, token, callback) {
 
     events.EventEmitter.call(this);
 
-    this.emitEvent = function(event, id, arg) {
-	this.emit(event + ":" + id, arg);
+    this.emitEvent = function(event, arg1, arg2) {
+	if (arg2) {
+	    var id = arg1;
+	    var arg = arg2;
+	    this.emit(event + ":" + id, arg);
+	} else {
+	    this.emit(event, arg1);
+	}
     }
 
     var self = this;
@@ -314,14 +320,16 @@ ZiBase.prototype.processZiBaseData = function(response) {
 		infos.id = match[3];
 		infos.value = (match[4] == undefined) ? "ON" : "OFF"
 	    }
-	    logger.info(replaceid(this, 
+	    var msg =replaceid(this, 
 				  response.message, 
 				  match[0], // entire string
 				  match[3], // ID
 				  match[1], // start
 				  match[2], // "ID modified" to be replaced by "ID modified (name)"
 				  match[5] // end
-				 ));
+				 );
+	    logger.info(msg);
+	    this.emitEvent("message", {message: msg, raw_message: response.message});
 
 	    logger.trace("infos=", infos)
   	    if (infos.id != undefined) {
@@ -356,6 +364,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 				 );
 	    }
 	    logger.info(trace);
+	    this.emitEvent("message", {message: trace, raw_message: response.reserved1});
 	    logger.trace("infos=", infos)
 	    if (infos.id != undefined) {
 		this.emitEvent("change", infos.id, infos)
@@ -363,24 +372,28 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	}
 	//Sent radio ID (1 Burst(s), Protocols='Family http' ): I5_OFF
 	else if (/Sent radio ID \(/.test(response.message)) {
+	    var msg;
 	    var re = /([^:]+:\s*)(([^_]+)(_OFF|_ON)?)/
 		if (( match = re.exec(response.message)) != null) {
 		    logger.trace(match);
 		    infos.id = match[3];
 		    infos.value = (match[4] == "_OFF") ? "OFF" : "ON"
-		    logger.info(replaceid(this, 
+		    msg=replaceid(this, 
 					  response.message, 
 					  match[0], // entire string
 					  match[3], // ID
 					  match[1], // start
 					  match[2], // "ID modified" to be replaced by "ID modified (name)"
 					  "" // end
-					 ));
+					 );
+		    logger.info(msg);
 		} else {
+		    msg=response.message;
 		    logger.error("Error, regexp " + re +  " not found in response.message!");
 		    logger.info(response.message);
 
 		}
+	    this.emitEvent("message", {message: msg, raw_message: response.message});
 	    logger.trace("infos=", infos)
 	    if (infos.id != undefined) {
 		this.emitEvent("change", infos.id, infos)
@@ -389,25 +402,28 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	//ZWave warning - Device ZA8 is unreachable! : ERR_ZA8
 	else if (/ZWave warning/.test(response.message)) {
 	    var re = /([^:]+:\s*)(ERR_([^_]+))/;
+	    var msg;
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 		infos.id = match[3];
 		infos.value = "ERR";
 		logger.debug(infos);
 		logger.debug(match);
-		logger.info(replaceid(this, 
-				      response.message, 
-				      match[0], // entire string
-				      match[3], // ID
-				      match[1], // start
-				      match[2], // "ID modified" to be replaced by "ID modified (name)"
-				      "" // end
-				     ));
+		msg=replaceid(this, 
+			      response.message, 
+			      match[0], // entire string
+			      match[3], // ID
+			      match[1], // start
+			      match[2], // "ID modified" to be replaced by "ID modified (name)"
+			      "" // end
+			     );
 	    } else {
+		msg=response.message;
 		logger.error("Error, regexp " + re +  " not found in response.message!");
-		logger.info(response.message);
 	    }
 	    
+	    logger.info(msg);
+	    this.emitEvent("message", {message: msg, raw_message: response.message});
 	    if (infos.id != undefined) {
 		this.emitEvent("error", infos.id, infos)
 	    }
@@ -418,17 +434,22 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 	    }
-	    logger.info(replaceid(this, 
-				  response.message, 
-				  match[0], // entire string
-				  match[2], // ID
-				  match[1], // start
-				  match[2], // "ID modified" to be replaced by "ID modified (name)"
-				  "" // end
-				 ));
-	} else
+	    var msg=replaceid(this, 
+			      response.message, 
+			      match[0], // entire string
+			      match[2], // ID
+			      match[1], // start
+			      match[2], // "ID modified" to be replaced by "ID modified (name)"
+			      "" // end
+			     );
+	    logger.info(msg);
+	    this.emitEvent("message", {message: msg, raw_message: response.message});
+	} else {
 	    logger.info(response.message);
+	    this.emitEvent("message", {message: response.message, raw_message: response.message});
+	}
     } else if (response.reserved1 == "SLAMSIG") {
+	this.emitEvent("restart");
 	// zibase is restarting
 	// let's reinit
 	self = this;
