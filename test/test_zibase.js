@@ -272,7 +272,7 @@ describe('Module zibase', function() {
 	});
     });
 
-    describe.only('#sendCommand(address, action, protocol, dimLevel, nbBurst)', function () {
+    describe('#sendCommand(address, action, protocol, dimLevel, nbBurst)', function () {
 	it('should send a request', function (done) {
 	    if (validZibaseUnreachable) {
 		console.log("Valid Zibase not reachable. Skipping test.");
