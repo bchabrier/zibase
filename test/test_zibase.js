@@ -272,6 +272,40 @@ describe('Module zibase', function() {
 	});
     });
 
+    describe.only('#sendCommand(address, action, protocol, dimLevel, nbBurst)', function () {
+	it('should send a request', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
+	    this.timeout(20000);
+	    var target="P16";
+	    initValidZibase(function() {
+		ziBase.on("message", function(msg) {
+		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
+
+		    if (re.test(msg.message)) {
+			done();
+		    }
+		});
+		ziBase.sendCommand(target, zibase.ZbAction.ON);
+	    });
+	});
+	it.skip('should return an error if not reachable', function (done) {
+	    this.timeout(20000);
+	    initUnreachableZibase(function() {
+		ziBase.getSensorInfo("OS439157539", function(err, value) {
+		    if (err) 
+			done();
+		    else 
+			done("Error not thrown");
+		});
+	    });
+	});
+    });
+
     describe('#getSensorInfo(var, cb)', function () {
 	it('should return two values', function (done) {
 	    if (validZibaseUnreachable) {
