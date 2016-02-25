@@ -571,7 +571,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
  * @param int $nbBurst Nombre d'émissions RF
  */
 ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbBurst) {
-    logger.info("params:", address, action, protocol, dimLevel, nbBurst)
+    logger.debug("params:", address, action, protocol, dimLevel, nbBurst)
     if (protocol == undefined) {
 	protocol = ZbProtocol.PRESET
     }
@@ -581,14 +581,13 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
     if (nbBurst == undefined) {
 	nbBurst = 1
     }
-    if (address.length > 1) {
+    if (/^[zZ]?[a-pA-P]([1-9]|1[0-6])$/.test(address)) {
+	address = address.toUpperCase();
 	if (address[0] == "Z") {
-	    address = address.toUpperCase();
 	    address = address.substr(1);
 	    protocol = ZbProtocol.ZWAVE;
 	}
-    }
-    if (address.length > 1) {
+
 	var request = new ZbRequest();
 	request.command = 11;
 
@@ -607,8 +606,10 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
 	request.param4 = address.charCodeAt(0) - 0x41;
 
 	this.sendRequest(request, true, function(response) {
-	    logger.info("response from Zibase = ", response);
+	    logger.debug("response from Zibase = ", response);
 	});
+    } else {
+	throw new Error("address must be (Z)[A-P]1-16.")
     }
 };
 
