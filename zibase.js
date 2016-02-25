@@ -455,7 +455,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	self = this;
 	this.loadDescriptors(function (err) {
 	    // deregister first, just in case
-	    deregisterListener();
+	    self.deregisterListener();
 	    // then re-listen to zibase
 	    self.deregistered = false;
 	    self.listenToZiBase(self.processZiBaseData);
