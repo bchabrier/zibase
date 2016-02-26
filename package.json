@@ -8,7 +8,8 @@
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "report": "istanbul report text-summary text",
-    "doc": "jsdoc -c ./jsdoc.conf.json -t ./node_modules/ink-docstrap/template/ -R README.md ."
+    "doc": "jsdoc -c ./jsdoc.conf.json -t ./node_modules/ink-docstrap/template/ -R README.md -d doc .",
+    "deploy": "./node_modules/gh-pages/bin/gh-pages -d doc"
   },
   "repository": {
     "type": "git",

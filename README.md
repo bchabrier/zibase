@@ -1,7 +1,4 @@
-[![Build Status](https://travis-ci.org/bchabrier/zibase.svg?branch=master)](https://travis-ci.org/bchabrier/zibase)
-[![NPM version](http://img.shields.io/npm/v/zibase.svg)](https://www.npmjs.org/package/zibase)
-[![Dependency Status](https://david-dm.org/bchabrier/zibase.svg)](https://david-dm.org/bchabrier/zibase)
-[![Coverage Status](https://coveralls.io/repos/github/bchabrier/zibase/badge.svg?branch=master)](https://coveralls.io/github/bchabrier/zibase?branch=master)
+[![Build Status](https://travis-ci.org/bchabrier/zibase.svg?branch=master)](https://travis-ci.org/bchabrier/zibase) [![NPM version](http://img.shields.io/npm/v/zibase.svg)](https://www.npmjs.org/package/zibase) [![Dependency Status](https://david-dm.org/bchabrier/zibase.svg)](https://david-dm.org/bchabrier/zibase) [![Coverage Status](https://coveralls.io/repos/github/bchabrier/zibase/badge.svg?branch=master)](https://coveralls.io/github/bchabrier/zibase?branch=master)
 
 [![NPM](https://nodei.co/npm/zibase.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/zibase/)
 
