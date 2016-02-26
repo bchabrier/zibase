@@ -151,8 +151,10 @@ The activity of the Zibase is logged through [tracer](https://www.npmjs.com/pack
 ```
 The `ZiBase` object is an event emitter that can call registered callbacks when receiving a given activity message. The supported events are:
 
+ - `message`: this event is emitted each time the Zibase sends a message
  - `change`: this event is emitted each time the Zibase sends a message about a device.
  - `error`: this event is emitted when a ZWAVE error message is send by the Zibase.
+ - `restart`: this event is emitted when the Zibase is restarting
 
 Listening to events is done with `on(event, id, callback)`, or `once(event, id, callback)` in which case the event is triggered only once.
 
