@@ -281,18 +281,23 @@ ZiBase.prototype.getDescriptor = function(id)
 
 ZiBase.prototype.on = function(event, id, callback) {
     if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
-	// normal call
 	event = event + ":" + id
     }
     if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
-	// probably a call to events.EventEmitter, with the original 'on' parameters
 	callback = id
     }
     ZiBase.super_.prototype.on.call(this, event, callback);
 }
 
 ZiBase.prototype.once = function(event, id, callback) {
-    ZiBase.super_.prototype.once.call(this, event + ":" + id, callback);
+    if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
+	// normal call
+	event = event + ":" + id
+    }
+    if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
+	callback = id
+    }
+    ZiBase.super_.prototype.once.call(this, event, callback);
     //logger.error(this)
 }
 
