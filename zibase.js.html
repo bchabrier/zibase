@@ -1,4 +1,74 @@
-//heaviliy inpspired from Benjamin Garel's PHP SDK, located in
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DocStrap Source: zibase.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#ZbAction">ZbAction</a></li><li><a href="global.html#ZbProtocol">ZbProtocol</a></li><li><a href="global.html#ZbRequest">ZbRequest</a></li><li><a href="global.html#ZbResponse">ZbResponse</a></li><li><a href="global.html#ZbVirtualProbe">ZbVirtualProbe</a></li><li><a href="global.html#ZiBase">ZiBase</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: zibase.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">//heaviliy inpspired from Benjamin Garel's PHP SDK, located in
 // http://bgarel.free.fr/Zibase/
 
 var http = require("http");
@@ -231,9 +301,9 @@ ZiBase.prototype.loadDescriptors = function(cb) {
     this.descriptors = [];
     this.descriptorsByID = [];
     var self = this;
-    request.get("https://zibase.net/m/get_xml.php?device=" + this.deviceId + "&token=" + this.token,
+    request.get("https://zibase.net/m/get_xml.php?device=" + this.deviceId + "&amp;token=" + this.token,
 		function(error, response, bodyString) {
-		    var re = /<([m|e])\s+([^>]*)>\s*<n>([^<]*)<\/n>\s*<\/[m|e]>/g;
+		    var re = /&lt;([m|e])\s+([^>]*)>\s*&lt;n>([^&lt;]*)&lt;\/n>\s*&lt;\/[m|e]>/g;
 
 		    var match;
 		    while (( match = re.exec(bodyString)) != undefined) {
@@ -261,7 +331,7 @@ ZiBase.prototype.loadDescriptors = function(cb) {
 
 			var id = desc.type == "device"?"c":"id";
 			assert.notEqual(desc[id], undefined);
-			if (desc.type == "device" && desc.p == 6) {
+			if (desc.type == "device" &amp;&amp; desc.p == 6) {
 			    // ZWave
 			    self.descriptorsByID["Z" + desc[id]] = desc;
 			} else
@@ -280,21 +350,21 @@ ZiBase.prototype.getDescriptor = function(id)
 }
 
 ZiBase.prototype.on = function(event, id, callback) {
-    if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
+    if (( typeof event === 'string') &amp;&amp; ( typeof id === 'string') &amp;&amp; ( typeof callback === 'function')) {
 	event = event + ":" + id
     }
-    if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
+    if (( typeof event === 'string') &amp;&amp; ( typeof id === 'function') &amp;&amp; ( typeof callback === 'undefined')) {
 	callback = id
     }
     ZiBase.super_.prototype.on.call(this, event, callback);
 }
 
 ZiBase.prototype.once = function(event, id, callback) {
-    if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
+    if (( typeof event === 'string') &amp;&amp; ( typeof id === 'string') &amp;&amp; ( typeof callback === 'function')) {
 	// normal call
 	event = event + ":" + id
     }
-    if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
+    if (( typeof event === 'string') &amp;&amp; ( typeof id === 'function') &amp;&amp; ( typeof callback === 'undefined')) {
 	callback = id
     }
     ZiBase.super_.prototype.once.call(this, event, callback);
@@ -302,7 +372,7 @@ ZiBase.prototype.once = function(event, id, callback) {
 }
 
 ZiBase.prototype.processZiBaseData = function(response) {
-    //response.message = "Received radio ID (<rf>433Mhz</rf> Noise=<noise>2090</noise> Level=<lev>2.3</lev><id>OS3930858754</id>"
+    //response.message = "Received radio ID (&lt;rf>433Mhz&lt;/rf> Noise=&lt;noise>2090&lt;/noise> Level=&lt;lev>2.3&lt;/lev>&lt;id>OS3930858754&lt;/id>"
     if (response.reserved1 == "TEXTMSG") {
 
 	function replaceid(zb, message, entire_string, id, before, id_modified, after){
@@ -317,9 +387,9 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	}
 
 	var infos = {};
-	//Received radio ID (<rf>ZWAVE ZA5</rf>  <dev>CMD/INTER</dev>  Batt=<bat>Ok</bat>): <id>ZA5_OFF</id>
+	//Received radio ID (&lt;rf>ZWAVE ZA5&lt;/rf>  &lt;dev>CMD/INTER&lt;/dev>  Batt=&lt;bat>Ok&lt;/bat>): &lt;id>ZA5_OFF&lt;/id>
 	if (/Received radio ID \(.*CMD\/INTER/.test(response.message)) {
-	    var re = /([^:]+:\s*<id>)(([^_]+)(_OFF)?)(<\/id>)/;
+	    var re = /([^:]+:\s*&lt;id>)(([^_]+)(_OFF)?)(&lt;\/id>)/;
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 		infos.id = match[3];
@@ -342,22 +412,22 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    }
 
 	}
-	//Received radio ID (<rf>433Mhz</rf> Noise=<noise>2175</noise> Level=<lev>2.3</lev>/5 <dev>Oregon  THWR288A-THN132N</dev> Ch=<ch>2</ch> T=<tem>+3.7</tem>°C (+38.6°F)  Batt=<bat>Ok</bat>): <id>OS3930858754</id>
+	//Received radio ID (&lt;rf>433Mhz&lt;/rf> Noise=&lt;noise>2175&lt;/noise> Level=&lt;lev>2.3&lt;/lev>/5 &lt;dev>Oregon  THWR288A-THN132N&lt;/dev> Ch=&lt;ch>2&lt;/ch> T=&lt;tem>+3.7&lt;/tem>°C (+38.6°F)  Batt=&lt;bat>Ok&lt;/bat>): &lt;id>OS3930858754&lt;/id>
 	else if (/Received radio ID \(/.test(response.message)) {
-	    var re = /<([^>]+)>([^<]*)<\/(\1)>/g
+	    var re = /&lt;([^>]+)>([^&lt;]*)&lt;\/(\1)>/g
 	    while (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 		infos[match[1]] = match[2];
 	    }
 	    var trace = replaceid(this, 
 				  response.message, 
-				  "<id>" + infos["id"] + "</id>", // entire string
+				  "&lt;id>" + infos["id"] + "&lt;/id>", // entire string
 				  infos["id"], // ID
-				  "<id>", // start
+				  "&lt;id>", // start
 				  infos["id"], // "ID modified" to be replaced by "ID modified (name)"
-				  "</id>" // end
+				  "&lt;/id>" // end
 				 );
-	    re = /(<rf>ZWAVE )([^<]+)(<\/rf>)/;
+	    re = /(&lt;rf>ZWAVE )([^&lt;]+)(&lt;\/rf>)/;
 	    if ((match = re.exec(trace)) != null) {
 		trace = replaceid(this, 
 				  trace, 
@@ -596,16 +666,16 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
 	var request = new ZbRequest();
 	request.command = 11;
 
-	if (action == ZbAction.DIM_BRIGHT && dimLevel == 0)
+	if (action == ZbAction.DIM_BRIGHT &amp;&amp; dimLevel == 0)
 	    action = ZbAction.OFF;
 
 	request.param2 = action;
 	logger.debug("action = ", action)
-	request.param2 |= (protocol & 0xFF) << 0x08;
+	request.param2 |= (protocol &amp; 0xFF) &lt;&lt; 0x08;
 	if (action == ZbAction.DIM_BRIGHT)
-	    request.param2 |= (dimLevel & 0xFF) << 0x10;
+	    request.param2 |= (dimLevel &amp; 0xFF) &lt;&lt; 0x10;
 	if (nbBurst > 1)
-	    request.param2 |= (nbBurst & 0xFF) << 0x18;
+	    request.param2 |= (nbBurst &amp; 0xFF) &lt;&lt; 0x18;
 
 	request.param3 = 0 + address.substr(1) - 1;
 	request.param4 = address.charCodeAt(0) - 0x41;
@@ -770,7 +840,7 @@ ZiBase.prototype.getState = function(address, callback) {
 	var houseCode = address.charCodeAt(0) - 0x41;
 	var device = 0 + address.substr(1) - 1;
 	request.param4 = device;
-	request.param4 |= (houseCode & 0x0F) << 0x04;
+	request.param4 |= (houseCode &amp; 0x0F) &lt;&lt; 0x04;
 
 	// Pour le zwave, il faut mettre le 9e bit à 1
 	if (isZWave)
@@ -791,10 +861,10 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
     var zibaseIP = this.ip;
 
     request.get("http://" + zibaseIP + "/sensors.xml", {timeout: 10000}, function(err, response, bodyString) {
-	var re = new RegExp('<ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
+	var re = new RegExp('&lt;ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
 	var match;
 	if (( match = re.exec(bodyString)) != undefined) {
-	    for ( i = 1; i < match.length; i++) {
+	    for ( i = 1; i &lt; match.length; i++) {
 		var to = match[i];
 		logger.trace(to);
 	    }
@@ -862,7 +932,7 @@ function ip2long(IP) {
     }
     // Reuse IP variable for component counter.
     IP[0] = 0;
-    for ( i = 1; i < 5; i += 1) {
+    for ( i = 1; i &lt; 5; i += 1) {
 	IP[0] += !!((IP[i] || '').length);
 	IP[i] = parseInt(IP[i]) || 0;
     }
@@ -874,7 +944,7 @@ function ip2long(IP) {
     if (IP[1] >= IP[5] || IP[2] >= IP[6] || IP[3] >= IP[7] || IP[4] >= IP[8]) {
 	return false;
     }
-    return IP[1] * (IP[0] === 1 || 16777216) + IP[2] * (IP[0] <= 2 || 65536) + IP[3] * (IP[0] <= 3 || 256) + IP[4] * 1;
+    return IP[1] * (IP[0] === 1 || 16777216) + IP[2] * (IP[0] &lt;= 2 || 65536) + IP[3] * (IP[0] &lt;= 3 || 256) + IP[4] * 1;
 }
 
 ZiBase.prototype.listenToZiBase = function(processDataMethod) {
@@ -909,3 +979,135 @@ ZiBase.prototype.listenToZiBase = function(processDataMethod) {
 
 };
 
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2015 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Fri Feb 26th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

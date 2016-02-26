@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DocStrap Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#ZbAction">ZbAction</a></li><li><a href="global.html#ZbProtocol">ZbProtocol</a></li><li><a href="global.html#ZbRequest">ZbRequest</a></li><li><a href="global.html#ZbResponse">ZbResponse</a></li><li><a href="global.html#ZbVirtualProbe">ZbVirtualProbe</a></li><li><a href="global.html#ZiBase">ZiBase</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><p><a href="https://travis-ci.org/bchabrier/zibase"><img src="https://travis-ci.org/bchabrier/zibase.svg?branch=master" alt="Build Status"></a> <a href="https://www.npmjs.org/package/zibase"><img src="http://img.shields.io/npm/v/zibase.svg" alt="NPM version"></a> <a href="https://david-dm.org/bchabrier/zibase"><img src="https://david-dm.org/bchabrier/zibase.svg" alt="Dependency Status"></a> <a href="https://coveralls.io/github/bchabrier/zibase?branch=master"><img src="https://coveralls.io/repos/github/bchabrier/zibase/badge.svg?branch=master" alt="Coverage Status"></a></p>
+<p><a href="https://nodei.co/npm/zibase/"><img src="https://nodei.co/npm/zibase.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
+<h1>zibase</h1><p>A NodeJS API to ZiBase</p>
+<h2>Introduction</h2><p>This module is a SDK to connect to a Zibase. Most of it should be working fine, as it is currently used in a real home automation installation. However, it has been tested so far only against a <a href="http://www.zodianet.com/en/toolbox-zibase/zibase-classic.html">Zibase Classic</a>.</p>
+<p>This SDK is strongly inspired from the <a href="http://bgarel.free.fr/Zibase/">PHP SDK</a> written by Benjamin Garel.</p>
+<h2>Installation</h2><p>Install as a npm module:</p>
+<pre class="prettyprint source lang-npm"><code>npm install zibase</code></pre><h2>Use</h2><p>Use as a npm module:</p>
+<pre class="prettyprint source lang-javascript"><code>var zibase=require('zibase');</code></pre><h2>Connection to a Zibase</h2><p>In order to communicate with a Zibase it is necessary to connect to it by instanciating the <code>ZiBase</code> class. For this, the IP address <code>zibaseIP</code> and the credentials  <code>deviceId</code> and <code>token</code> of the Zibase are needed.</p>
+<pre class="prettyprint source lang-javascript"><code>var Zibase = new zibase.ZiBase(
+                   zibaseIP,
+                   deviceId,
+                   token);</code></pre><p>An optional <code>callback</code> parameter can be used to be notified once the Zibase has been recognized.</p>
+<pre class="prettyprint source lang-javascript"><code>var Zibase = new zibase.ZiBase(
+                   zibaseIP,
+                   deviceId,
+                   token,
+                   function () {
+                       console.log(&quot;Connection established.&quot;);
+                   });</code></pre><p>It will initialize a connexion to the Zibase, register the calling application as a client of the Zibase, letting the Zibase send its activity information to the client. The first message sent by the Zibase indicates that the registration was successful:</p>
+<pre class="prettyprint source"><code>21/02/2016 20:32:51.929 &lt;info> zibase.js:424 (ZiBase.processZiBaseData) Zapi linked to host IP=&lt;zip>192.168.0.10&lt;/zip> UDP Port=&lt;zudp>60580&lt;/zudp></code></pre><h2>Descriptors</h2><p>The descriptors of the Zibase are loaded when the <code>ZiBase</code> class is instanciated. They can be accessed through:</p>
+<ul>
+<li>the <code>ZiBase.descriptors</code> member:<pre class="prettyprint source lang-javascript"><code>console.log(Zibase.descriptors);</code></pre>will produce:<pre class="prettyprint source"><code>[ { type: 'device',
+ name: 'Ventilation SdB',
+ t: 'receiverXDom',
+ i: 'logotype_airfan.png',
+ c: 'C3' },
+{ type: 'device',
+ name: 'Conso Wall Plug',
+ t: 'power',
+ i: 'logotype_power.png',
+ c: 'PZA3' },
+{ type: 'device',
+ name: 'Pompe à Chaleur',
+ t: 'receiverXDom',
+ i: 'logotype_heatpomp.png',
+ c: 'P7',
+ p: '5' },
+{ type: 'scenario',
+ name: 'simulation intrusion',
+ id: '9',
+ icon: 'logoMacro_Portes.png' },
+{ type: 'scenario',
+ name: 'Notification iOS',
+ id: '16',
+ icon: 'logoMacro_Scenario.png' }
+]</code></pre></li>
+<li>the <code>ZiBase.getDescriptor(id)</code> method:<pre class="prettyprint source lang-javascript"><code>console.log(Zibase.getDescriptor(&quot;P7&quot;));</code></pre>will produce:<pre class="prettyprint source"><code>{ type: 'device',
+name: 'Pompe à Chaleur',
+t: 'receiverXDom',
+i: 'logotype_heatpomp.png',
+c: 'P7',
+p: '5' }</code></pre></li>
+</ul>
+<h2>Variables</h2><p>The variables <code>V0</code> to <code>V31</code> can be read through  <code>ZiBase.getVariable</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>Zibase.getVariable(10, function(err, value) {
+    if (err)
+        console.log(err);
+    console.log(&quot;V10=&quot; + value);
+});</code></pre><h2>Devices</h2><p>The state of devices can be retrieved through  <code>ZiBase.getState</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>Zibase.getState(&quot;ZB5&quot;, function(err, value) {
+    if (err)
+        console.log(err);
+    console.log(&quot;ZB5 state =&quot; + value);
+});</code></pre><h2>Sensors</h2><p>The information about a sensor can be retrieved through  <code>ZiBase.getSensorInfo</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>Zibase.getSensorInfo(&quot;OS439157578&quot;, function(err, value) {
+    if (err)
+        console.log(err);
+    console.log(&quot;Infos =&quot; + value);
+});</code></pre><h2>Events</h2><p>The activity of the Zibase is logged through <a href="https://www.npmjs.com/package/tracer/">tracer</a> messages:</p>
+<pre class="prettyprint source"><code>21/02/2016 22:00:48.955 &lt;info> zibase.js:352 (ZiBase.processZiBaseData) Received radio ID (&lt;rf>ZWAVE ZB5&lt;/rf> &lt;dev>Low-Power Measure&lt;/dev> Total Energy=&lt;kwh>121.4&lt;/kwh>kWh Power=&lt;w>00&lt;/w>W Batt=&lt;bat>Ok&lt;/bat>): &lt;id>PZB5&lt;/id></code></pre><p>The <code>ZiBase</code> object is an event emitter that can call registered callbacks when receiving a given activity message. The supported events are:</p>
+<ul>
+<li><code>message</code>: this event is emitted each time the Zibase sends a message</li>
+<li><code>change</code>: this event is emitted each time the Zibase sends a message about a device.</li>
+<li><code>error</code>: this event is emitted when a ZWAVE error message is send by the Zibase.</li>
+<li><code>restart</code>: this event is emitted when the Zibase is restarting</li>
+</ul>
+<p>Listening to events is done with <code>on(event, id, callback)</code>, or <code>once(event, id, callback)</code> in which case the event is triggered only once.</p>
+<p>The following code:</p>
+<pre class="prettyprint source lang-javascript"><code>Zibase.on('change', &quot;PZB5&quot;, function(msg){
+     console.log(msg);
+});</code></pre><p>will produce the following output:</p>
+<pre class="prettyprint source"><code>21/02/2016 21:36:20.553 &lt;info> zibase.js:352 (ZiBase.processZiBaseData) Received radio ID (&lt;rf>ZWAVE ZB5&lt;/rf> &lt;dev>Low-Power Measure&lt;/dev> Total Energy=&lt;kwh>121.4&lt;/kwh>kWh Power=&lt;w>00&lt;/w>W Batt=&lt;bat>Ok&lt;/bat>): &lt;id>PZB5&lt;/id>
+{ rf: 'ZWAVE ZB5',
+  dev: 'Low-Power Measure',
+  kwh: '121.4',
+  w: '00',
+  bat: 'Ok',
+  id: 'PZB5' }</code></pre><h2>Deconnexion</h2><p>When no more interaction with the Zibase is needed, it is recommended to deconnect from it thanks to <code>deregisterListener()</code>.</p>
+<pre class="prettyprint source lang-javascript"><code>Zibase.deregisterListener();</code></pre><p>The effect of this call is to ask the Zibase to stop sending its information. It seems the Zibase can keep track of 4 clients only. When a fifth client is registered, it will replace the oldest one, hence causing a forced deregistration of the first client. When using a single client, it usually not a problem to not call <code>deregisterListener()</code>. However, when using several clients connected to a single Zibase, it is highly recommended to make the call, to avoid the others from being disconnected. A good practice is to use the following code:</p>
+<pre class="prettyprint source lang-javascript"><code>function exitHandler() {
+    Zibase.deregisterListener();
+    console.log(&quot;Deregistered from Zibase.&quot;);
+}
+
+process.on('exit', exitHandler);
+process.on('SIGINT', exitHandler);
+process.on('uncaughtException', exitHandler);</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2015 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Fri Feb 26th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>
