@@ -384,6 +384,26 @@ describe('Module zibase', function() {
 		ziBase.sendCommand(target, zibase.ZbAction.ON);
 	    });
 	});
+	it('should send a request on valid ZWAVE IDs', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
+	    this.timeout(20000);
+	    var target="ZP16";
+	    initValidZibase(function() {
+		ziBase.on("message", function(msg) {
+		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
+
+		    if (re.test(msg.message)) {
+			done();
+		    }
+		});
+		ziBase.sendCommand(target, zibase.ZbAction.ON);
+	    });
+	});
 	it('should reject invalid IDs', function (done) {
 	    var target="P16";
 	    initDemoZibase(function() {
