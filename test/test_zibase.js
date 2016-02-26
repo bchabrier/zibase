@@ -46,6 +46,8 @@ describe('Module zibase', function() {
 	ziBase.loadDescriptors = zibase.ZiBase.prototype.loadDescriptors;
 	ziBase.getDescriptor = zibase.ZiBase.prototype.getDescriptor;
 	ziBase.processZiBaseData = zibase.ZiBase.prototype.processZiBaseData;
+	ziBase.on = zibase.ZiBase.prototype.on;
+	ziBase.deregisterListener = zibase.ZiBase.prototype.deregisterListener;
 	
     }
     
@@ -163,46 +165,109 @@ describe('Module zibase', function() {
 	    assert.equal(desc, undefined);
 	});
     });
-    describe('#processZibaseData(response)', function () {
-	beforeEach("Initialize a fake zibase", function () {
-	    // fake a zibase
-	    initFakeZibase();
+
+    describe('#on(event, id, callback)', function () {
+	beforeEach("Initialize the demo zibase", function (done) {
+	    // use the demo zibase
+	    initDemoZibase(done);
 	});
-	beforeEach("Load zibase descriptors", function (done) {
-	    ziBase.loadDescriptors(function (err) {
-		assert.equal(err, null);
-		done(err);
+
+	it('should emit a "message" event on each message', function (done) {
+	    var test_message="A message";
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : test_message
+	    }
+	    ziBase.on("message", function(msg) {
+		assert.equal(msg.message, test_message);
+		assert.equal(msg.raw_message, test_message);
+		done();
 	    });
+	    ziBase.processZiBaseData(response);
 	});
-	it('should replace P4 by P4 (name) in response', function () {
+	it('should emit two "message" events for two messages', function (done) {
+	    var test_message="A message";
 	    var response = {
 		reserved1 : "TEXTMSG",
-		message : "ZWave warning: ERR_P4"
-
+		message : test_message
 	    }
-	    zibase.test_logger = true;
+	    var count = 0;
+	    ziBase.on("message", function(msg) {
+		assert.equal(msg.message, test_message);
+		assert.equal(msg.raw_message, test_message);
+		count++;
+		if (count == 2) {
+		    done();
+		}
+	    });
 	    ziBase.processZiBaseData(response);
-	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
+	    ziBase.processZiBaseData(response);
 	});
-	it('should replace id_OFF by id_OFF (name) in response', function () {
+	it('should emit a "change" event when a value changes', function (done) {
+	    var test_message="Received radio ID (<rf>433Mhz</rf> Noise=<noise>2090</noise> Level=<lev>2.3</lev><id>OS3930858754</id>";
+
 	    var response = {
 		reserved1 : "TEXTMSG",
-		message : "Sent radio ID (1 Burst(s), Protocols='Family http' ): P4_OFF"
-
+		message : test_message
 	    }
-	    zibase.test_logger = true;
+	    ziBase.on("change", "OS3930858754", function(msg) {
+		assert.equal(msg.lev, 2.3);
+		assert.equal(msg.noise, 2090);
+		assert.equal(msg.rf, "433Mhz");
+		assert.equal(msg.id, "OS3930858754");
+		done();
+	    });
 	    ziBase.processZiBaseData(response);
-	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
 	});
-	it('should replace <rf>ZWAVE id<rf> by name id (name) in response', function () {
+	it('should send a "restart" event on "SLAMSIG"', function (done) {
+	    var response = {
+		reserved1 : "SLAMSIG"
+	    }
+	    ziBase.on("restart", function() {
+		done();
+	    });
+	    ziBase.processZiBaseData(response);
+	});
+    });
+
+    describe('#once(event, id, callback)', function () {
+	beforeEach("Initialize the demo zibase", function (done) {
+	    // use the demo zibase
+	    initDemoZibase(done);
+	});
+
+	it('should emit a "message" event on each message', function (done) {
+	    var test_message="A message";
 	    var response = {
 		reserved1 : "TEXTMSG",
-		message : "Received radio ID (<rf>ZWAVE P4</rf> <dev>Low-Power Measure</dev> Total Energy=<kwh>39.8</kwh>kWh Power=<w>00</w>W Batt=<bat>Ok</bat>): <id>PZP4</id>"
-
+		message : test_message
 	    }
-	    zibase.test_logger = true;
+	    ziBase.once("message", function(msg) {
+		assert.equal(msg.message, test_message);
+		assert.equal(msg.raw_message, test_message);
+		done();
+	    });
 	    ziBase.processZiBaseData(response);
-	    assert.equal(zibase.test_logger_data.message, response.message.replace(/ P4/g, " P4 (Garage)"));
+	});
+	it('should emit only one "message" event on each message', function (done) {
+	    var test_message="A message";
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : test_message
+	    }
+	    var count=0;
+	    ziBase.once("message", function(msg) {
+		assert.equal(msg.message, test_message);
+		assert.equal(msg.raw_message, test_message);
+		count++;
+	    });
+	    setTimeout(function () {
+		assert(count == 1);
+		done();
+	    }, 1000);
+	    ziBase.processZiBaseData(response);
+	    ziBase.processZiBaseData(response);
+	    ziBase.processZiBaseData(response);
 	});
     });
 
@@ -272,6 +337,47 @@ describe('Module zibase', function() {
 	});
     });
 
+    describe('#sendCommand(address, action, protocol, dimLevel, nbBurst)', function () {
+	it('should send a request on valid IDs', function (done) {
+	    if (validZibaseUnreachable) {
+		console.log("Valid Zibase not reachable. Skipping test.");
+		this.skip();
+		done();
+		return;
+	    }
+	    this.timeout(20000);
+	    var target="P16";
+	    initValidZibase(function() {
+		ziBase.on("message", function(msg) {
+		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
+
+		    if (re.test(msg.message)) {
+			done();
+		    }
+		});
+		ziBase.sendCommand(target, zibase.ZbAction.ON);
+	    });
+	});
+	it('should reject invalid IDs', function (done) {
+	    var target="P16";
+	    initDemoZibase(function() {
+		assert.throws(function() {
+		    ziBase.sendCommand("A0", zibase.ZbAction.ON);
+		}, Error);
+		assert.throws(function() {
+		    ziBase.sendCommand("A17", zibase.ZbAction.ON);
+		}, Error);
+		assert.throws(function() {
+		    ziBase.sendCommand("Q1", zibase.ZbAction.ON);
+		}, Error);
+		assert.throws(function() {
+		    ziBase.sendCommand("Q12", zibase.ZbAction.ON);
+		}, Error);
+		done();
+	    });
+	});
+    });
+
     describe('#getSensorInfo(var, cb)', function () {
 	it('should return two values', function (done) {
 	    if (validZibaseUnreachable) {
@@ -307,6 +413,8 @@ describe('Module zibase', function() {
 	    });
 	});
     });
+
+
 
     describe('Run examples', function() {
 	var exampleDir = "../zibase_examples";

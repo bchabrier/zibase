@@ -1,14 +1,14 @@
 {
   "name": "zibase",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "A NodeJS API to ZiBase",
   "main": "zibase.js",
   "scripts": {
     "test": "mocha",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha",
-    "report": "istanbul report text-summary text"
-    
+    "report": "istanbul report text-summary text",
+    "doc": "jsdoc -c ./jsdoc.conf.json -t ./node_modules/ink-docstrap/template/ -R README.md ."
   },
   "repository": {
     "type": "git",
