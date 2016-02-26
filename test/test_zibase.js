@@ -249,6 +249,18 @@ describe('Module zibase', function() {
 	    });
 	    ziBase.processZiBaseData(response);
 	});
+	it('should emit a "change" event on each message', function (done) {
+	    var test_message="Received radio ID (<rf>ZWAVE ZA5</rf>  <dev>CMD/INTER</dev>  Batt=<bat>Ok</bat>): <id>ZA5_OFF</id>";
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : test_message
+	    }
+	    ziBase.once("change", "ZA5", function(msg) {
+		assert.equal(msg.value, "OFF");
+		done();
+	    });
+	    ziBase.processZiBaseData(response);
+	});
 	it('should emit only one "message" event on each message', function (done) {
 	    var test_message="A message";
 	    var response = {
