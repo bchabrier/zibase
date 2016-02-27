@@ -97,7 +97,7 @@
 <h2>Introduction</h2><p>This module is a SDK to connect to a Zibase. Most of it should be working fine, as it is currently used in a real home automation installation. However, it has been tested so far only against a <a href="http://www.zodianet.com/en/toolbox-zibase/zibase-classic.html">Zibase Classic</a>.</p>
 <p>This SDK is strongly inspired from the <a href="http://bgarel.free.fr/Zibase/">PHP SDK</a> written by Benjamin Garel.</p>
 <h2>Installation</h2><p>Install as a npm module:</p>
-<pre class="prettyprint source lang-npm"><code>npm install zibase</code></pre><h2>Use</h2><p>Use as a npm module:</p>
+<pre class="prettyprint source lang-npm"><code>npm install zibase</code></pre><h2>Usage</h2><p>Use as a npm module:</p>
 <pre class="prettyprint source lang-javascript"><code>var zibase=require('zibase');</code></pre><h2>Connection to a Zibase</h2><p>In order to communicate with a Zibase it is necessary to connect to it by instanciating the <code>ZiBase</code> class. For this, the IP address <code>zibaseIP</code> and the credentials  <code>deviceId</code> and <code>token</code> of the Zibase are needed.</p>
 <pre class="prettyprint source lang-javascript"><code>var Zibase = new zibase.ZiBase(
                    zibaseIP,
@@ -187,7 +187,7 @@ p: '5' }</code></pre></li>
 
 process.on('exit', exitHandler);
 process.on('SIGINT', exitHandler);
-process.on('uncaughtException', exitHandler);</code></pre></article>
+process.on('uncaughtException', exitHandler);</code></pre><h2>Documentation</h2><p>A more detailed JSDoc generated documentation can be found here: http://bchabrier.github.io/zibase/</p></article>
     </section>
 
 
