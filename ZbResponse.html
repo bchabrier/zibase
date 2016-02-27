@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Global</title>
+	<title>DocStrap Class: ZbResponse</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -40,14 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="ZbRequest.html">ZbRequest</a></li><li><a href="ZbResponse.html">ZbResponse</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#ZiBase">ZiBase</a></li>
+					<li><a href="ZbRequest.html">ZbRequest</a></li><li><a href="ZbResponse.html">ZbResponse</a></li><li><a href="ZiBase.html">ZiBase</a></li>
 				</ul>
 			</li>
 			
@@ -77,14 +70,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Global</h1>
+	<h1 class="page-title">Class: ZbResponse</h1>
 <section>
 
 <header>
     
         <h2>
-        
+        ZbResponse
         </h2>
+        
+            <div class="class-description"><p>Handles responses from the Zibase</p></div>
         
     
 </header>
@@ -94,71 +89,9 @@
     <div class="container-overview">
     
         
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
 <hr>
 <dt>
-    <h4 class="name" id="ZiBase"><span class="type-signature"></span>ZiBase(string, string, string)</h4>
+    <h4 class="name" id="ZbResponse"><span class="type-signature"></span>new ZbResponse(buffer)</h4>
     
     
 </dt>
@@ -166,7 +99,7 @@
 
     
     <div class="description">
-        <p>Permet de manipuler la Zibase.<br>Il est nécessaire de connaître l'adresse IP de sa zibase pour l'utiliser.</p>
+        <p>Creates a response from the binary data sent by the Zibase</p>
     </div>
     
 
@@ -201,10 +134,16 @@
 
         <tr>
             
-                <td class="name"><code>string</code></td>
+                <td class="name"><code>buffer</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">Buffer</span>
+
+
+
             
             </td>
 
@@ -212,43 +151,7 @@
 
             
 
-            <td class="description last"><p>$ipAddr Adresse IP de la zibase</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>string</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>$deviceId Device de la zibase</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>string</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>$token Token de la zibase</p></td>
+            <td class="description last"><p>Binary data</p></td>
         </tr>
 
     
@@ -293,7 +196,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="zibase.js.html">zibase.js</a>,
-				 <a href="zibase.js.html#sunlight-1-line-218">line 218</a>
+				 <a href="zibase.js.html#sunlight-1-line-190">line 190</a>
 			</li>
 		</ul>
 	</dd>
@@ -322,7 +225,21 @@
     
 </dd>
 
-        </dl>
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     
