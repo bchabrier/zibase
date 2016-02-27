@@ -22,61 +22,90 @@ var logger = require("tracer").colorConsole({
 });
 
 /**
- * Enum des protocoles Zibase
+ * Zibase protocols
+ * @namespace
  */
 var ZbProtocol = new function () {
+    /** * @constant */
     this.PRESET = 0;
+    /** * @constant */
     this.VISONIC433 = 1;
+    /** * @constant */
     this.VISONIC868 = 2;
+    /** * @constant */
     this.CHACON = 3; 
+    /** * @constant */
     this.DOMIA = 4;
+    /** * @constant */
     this.X10 = 5;
+    /** * @constant */
     this.ZWAVE = 6;
+    /** * @constant */
     this.RFS10 = 7;
+    /** * @constant */
     this.X2D433 = 8;
+    /** * @constant */
     this.X2D433ALRM = 8;
+    /** * @constant */
     this.X2D868 = 9;
+    /** * @constant */
     this.X2D868ALRM = 9;
+    /** * @constant */
     this.X2D868INSH = 10;
+    /** * @constant */
     this.X2D868PIWI = 11;
+    /** * @constant */
     this.X2D868BOAC = 12;
 };
 exports.ZbProtocol = ZbProtocol;
 
 /**
- * Enum des sondes virtuelles
+ * Virtual probes
+ * @namespace
  */
 var ZbVirtualProbe = new function () {
+    /** * @constant */
     this.OREGON = 17;
+    /** * @constant */
     this.OWL = 20;
 
 };
 
 /**
- * Enum des actions possibles par la Zibase
+ * Possible actions of the Zibase
+ * @namespace
  */
 var ZbAction = new function () {
+    /** * @constant */
     this.OFF = 0;
+    /** * @constant */
     this.ON = 1;
+    /** * @constant */
     this.DIM_BRIGHT = 2;
+    /** * @constant */
     this.ALL_LIGHTS_ON = 4;
+    /** * @constant */
     this.ALL_LIGHTS_OFF = 5;
+    /** * @constant */
     this.ALL_OFF = 6;
+    /** * @constant */
     this.ASSOC = 7;
 };
 exports.ZbAction = ZbAction;
 
-/**
- * Enum des états possibles des alertes de la Zibase
-
- var ZbEventType = new function () {
- this.OFF = 9;
- this.ON = 4;
- };
- exports.ZbEventType = ZbEventType;
+/*
+ * Possible states of alerts in the Zibase
+ * @namespace
+var ZbEventType = new function () {
+    this.OFF = 9;
+    this.ON = 4;
+};
+exports.ZbEventType = ZbEventType;
 */
+
 /**
- * Requête spécifique pour la Zibase
+ * Creates an empty request.
+ * @class Handles requests to the Zibase
  */
 function ZbRequest() {
     this.header = "ZSIG";
@@ -94,8 +123,8 @@ function ZbRequest() {
 }
 
 /**
- * Formate la requête en chaîne binaire compatible Zibase
- * @return la chaîne binaire
+ * Formats the request into a binary array understandable by the Zibase.
+ * @return {Buffer} Binary array
  */
 
 ZbRequest.prototype.toBinaryArray = function() {
@@ -154,13 +183,11 @@ ZbRequest.prototype.toBinaryArray = function() {
 }
 
 /**
- * Réponse spécifique de la Zibase
+ * Creates a response from the binary data sent by the Zibase
+ * @class Handles responses from the Zibase
+ * @param {Buffer} buffer Binary data
  */
 function ZbResponse(buffer) {
-
-    /**
-     * Construit la réponse à partir des données binaires envoyées par la Zibase
-     */
 
     var tempString = "";
     this.header = buffer.toString('utf8', 0, 4);
@@ -183,11 +210,13 @@ function ZbResponse(buffer) {
 };
 
 /**
- * Permet de manipuler la ZiBase.
- * Il est nécessaire de connaître l'adresse IP de sa zibase pour l'utiliser.
- * @param string $ipAddr Adresse IP de la zibase
- * @param string $deviceId Device de la zibase
- * @param string $token Token de la zibase
+ * 
+ * @class Allows to manipulate the zibase. The IP of the zibase is needed.
+ * @param {string} ipAddr  IP address of the zibase
+ * @param {string} deviceId Device ID of the zibase
+ * @param {string} token Token of the zibase
+ * @param {function} callback Callback to call when the connection to the zibase is established.
+ * @extends events.EventEmitter
  */
 function ZiBase(ipAddr, deviceId, token, callback) {
 
@@ -224,9 +253,10 @@ util.inherits(ZiBase, events.EventEmitter);
 
 exports.ZiBase = ZiBase;
 
-/*
- * Load the descriptors of declared devices and scenarios
- */
+/**
+  * Loads the descriptors of declared devices and scenarios
+  * @param {function} cb Callback to be called when the descriptors are loaded
+  */
 ZiBase.prototype.loadDescriptors = function(cb) {
     this.descriptors = [];
     this.descriptorsByID = [];
@@ -271,14 +301,21 @@ ZiBase.prototype.loadDescriptors = function(cb) {
 		});
 }
 
-/*
- * retrieve the descriptor with a given id
+/**
+ * retrieves the descriptor with a given id
+ * @param {string} id ID of the descriptor to retrieve
  */
 ZiBase.prototype.getDescriptor = function(id) 
 {
     return this.descriptorsByID[id];
 }
 
+/**
+ * listens to events
+ * @param {string} event Event to be listened to
+ * @param {string} [id] The ID of the device that triggers the event. Don't specify any when the event is triggered by the zibase
+ * @param {function} callback Callback to be called when the event is triggered. The parameters of the callback depend on the event
+ */
 ZiBase.prototype.on = function(event, id, callback) {
     if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
 	event = event + ":" + id
@@ -289,6 +326,13 @@ ZiBase.prototype.on = function(event, id, callback) {
     ZiBase.super_.prototype.on.call(this, event, callback);
 }
 
+/**
+ * same as method <tt>on</tt> but only for one event
+ * @see Zibase#on
+ * @param {string} event Event to be listened to
+ * @param {string} [id] The ID of the device that triggers the event. Don't specify any when the event is triggered by the zibase
+ * @param {function} callback Callback to be called when the event is triggered. The parameters of the callback depend on the event
+ */
 ZiBase.prototype.once = function(event, id, callback) {
     if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
 	// normal call
@@ -301,6 +345,11 @@ ZiBase.prototype.once = function(event, id, callback) {
     //logger.error(this)
 }
 
+/**
+ * process the information messages sent by the zibase.
+ * Emits events depending on the content of the response.
+ * @param {Response} response A response to process, as sent by the zibase
+ */
 ZiBase.prototype.processZiBaseData = function(response) {
     //response.message = "Received radio ID (<rf>433Mhz</rf> Noise=<noise>2090</noise> Level=<lev>2.3</lev><id>OS3930858754</id>"
     if (response.reserved1 == "TEXTMSG") {
@@ -498,8 +547,10 @@ function pushRequest(requestFunc) {
 }
 
 /**
- * Envoie la requête à la Zibase sur le réseau
- * @param ZbRequest requête au format Zibase
+ * Sends a request to the zibase
+ * @param {ZbRequest} request Request to be sent
+ * @param {boolean} withResponse Indicates if a response is to be expected
+ * @param {function} callback Callback to be called when the response is received
  */
 ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 
@@ -568,12 +619,12 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 };
 
 /**
- * Lance la commande RF de l'actionneur spécifié par son adresse et son protocol
- * @param string $address Adresse au format X10 de l'actionneur (ex: B5)
- * @param int $action Action à réaliser (Utiliser l'enum ZbAction)
- * @param int $protocol Protocole RF (Utiliser l'enum ZbProtocol)
- * @param int $dimLevel Non supporté par la zibase pour l'instant
- * @param int $nbBurst Nombre d'émissions RF
+ * Ask the zibase to send a command to an activator specified by its ID and protocol
+ * @param {string} address Address of the activator in X10 format (e.g. B5)
+ * @param {ZbAction} action Action to execute
+ * @param {ZbProtocol} protocol Protocol RF to be used
+ * @param {int} dimLevel Not supported by the Zibase for now
+ * @param {int} nbBurst Number of RF emissions
  */
 ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbBurst) {
     logger.debug("params:", address, action, protocol, dimLevel, nbBurst)
@@ -619,10 +670,8 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
 };
 
 /**
- * Lance le scenario spécifié par son numéro.
- * Le numéro du scenario est indiqué entre parenthèse
- * dans le suivi d'activité de la console de configuration.
- * @param int numScenario Le numéro du scenario
+ * Asks the zibase to run the scenario specified by its number
+ * @param {int} numScenario the scenario number
  */
 ZiBase.prototype.runScenario = function(numScenario) {
     logger.info("runScenario", numScenario);
@@ -636,11 +685,9 @@ ZiBase.prototype.runScenario = function(numScenario) {
 }
 
 /**
- * Positionne une alerte à l’état ON / OFF ou simule
- * l’arrivée d’un ID détecteur.
- * dans le suivi d'activité de la console de configuration.
- * @param int action L'action: 0 - inactiver une alerte, 1 - activer une alerte, 2 - simuler l’arrivée d’un ID de détecteur (peut entraîner l’exécution de scénarios)
- * @param String address au format X10 de l'actionneur (ex: B5 ou ZA14)
+ * Positions a Zibase alert to the state ON or OFF, or simulates a sensor ID message in the activity log of the Zibase
+ * @param {int} action The action: 0 - deactivate an alert, 1 - activate an alert, 2 - simulate a sensor ID message (can trigger the execution of a scenario)
+ * @param {string} address Address of the activator in X10 format (e.g. B5 or ZA14)
  */
 ZiBase.prototype.setEvent = function(action, address) {
     logger.info("setEvent", action, address);
@@ -684,9 +731,9 @@ ZiBase.prototype.setEvent = function(action, address) {
 }
 
 /**
- * Récupère la valeur d'une variable Vx de la Zibase
- * @param int $numVar le numéro de la variable (0 à 19)
- * @return int la valeur de la variable demandée
+ * Get the value of a Vx variable of the Zibase
+ * @param {int} numVar number of the variable (0 to 31)
+ * @param {function} callback Callback to be called when the value is retrieved
  */
 ZiBase.prototype.getVariable = function(numVar, callback) {
     logger.trace("entering getVariable", numVar);
@@ -705,9 +752,9 @@ ZiBase.prototype.getVariable = function(numVar, callback) {
 }
 
 /**
- * Enregistre une machine en tant qu'écouteur
- * @param string $ip l'adresse IP de l'écouteur
- * @param int $port le port sur lequel écouter
+ * Asks the Zibase to register the caller client as a listener. 
+ * After this call, the Zibase will send its activity log to the caller, on the given port.
+ * @param {int} port The port to listen in order to receive the messages
  */
 ZiBase.prototype.registerListener = function(port) {
     this.localport = port;
@@ -725,7 +772,7 @@ ZiBase.prototype.registerListener = function(port) {
 };
 
 /**
- * Désenregistre une machine en tant qu'écouteur
+ * Asks the Zibase to unregister the caller client
  */
 ZiBase.prototype.deregisterListener = function() {
     logger.debug("deregisterListener", this.myip, this.localport);
@@ -744,11 +791,9 @@ ZiBase.prototype.deregisterListener = function() {
 };
 
 /**
- * Récupère l'état d'un actionneur.
- * La zibase ne recoit que les ordres RF et non les ordres CPL X10,
- * donc l'état d'un actionneur X10 connu par la zibase peut être erronné.
- * @param string adresse au format X10 de l'actionneur
- * @return int l'état : 0=OFF, 1=ON
+ * Gets the state of an activator from the Zibase
+ * @param {string} adress X10 formatted address of the activator
+ * @param {function} callback Callback to be called when the state is received
  */
 ZiBase.prototype.getState = function(address, callback) {
     logger.trace("getState", address);
@@ -784,6 +829,11 @@ ZiBase.prototype.getState = function(address, callback) {
 
 };
 
+/**
+ * retrieves the information about a given sensor
+ * @param {string} idSensor ID of the sensor
+ * @param {function} callback Callback to be called when the info is retrieved
+*/
 ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
 
     var typeSensor = idSensor.substring(0, 2);

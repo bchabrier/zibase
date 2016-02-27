@@ -22,8 +22,8 @@ Install as a npm module:
 npm install zibase
 ```
 
-Use
----
+Usage
+-----
 
 Use as a npm module:
 
@@ -196,5 +196,9 @@ process.on('SIGINT', exitHandler);
 process.on('uncaughtException', exitHandler);
 ```
 
+Documentation
+-------------
+
+A more detailed JSDoc generated documentation can be found [here](http://bchabrier.github.io/zibase/).
 
 
