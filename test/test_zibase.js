@@ -322,14 +322,23 @@ describe('Module zibase', function() {
 		done(err);
 	    });
 	});
-	it('should replace P4 by P4 (name) in response', function () {
+	it('should replace ERR_P4 by ERR_P4 (name) in response', function () {
 	    var response = {
 		reserved1 : "TEXTMSG",
-		message : "ZWave warning: ERR_P4"
+		message : "ZWave warning - Device P4 is unreachable! : ERR_P4"
 	    }
 	    zibase.test_logger = true;
 	    ziBase.processZiBaseData(response);
 	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
+	});
+	it('should replace P4 by P4 (name) in device unknown response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "ZWave warning -  Device P4 is unknown!"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, "ZWave warning -  Device P4 (Garage) is unknown!");
 	});
 	it('should replace id_OFF by id_OFF (name) in response', function () {
 	    var response = {

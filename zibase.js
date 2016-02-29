@@ -486,7 +486,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	}
 	// ZWave warning -  Device ZP16 is unknown!
 	else if (/ZWave warning.*unknown/.test(response.message)) {
-	    var re = /(.*Device\s*)(Z[A-Z][0-9]+)/;
+	    var re = /(.*Device\s*)([A-Z]+[0-9]+)/;
 	    var msg;
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
