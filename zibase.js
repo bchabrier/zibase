@@ -569,7 +569,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 	if (withResponse) {
 	    var t = setTimeout(function() {
 		var address = socket.address();
-		var err = new Error("socket timeout while waiting for response on " + socket.address().port + ", request was :" + request.description);
+		var err = new Error("socket timeout while waiting for response on " + socket.address().port + ", request was: '" + request.description + "'.");
 		socket.close();
 		callback(err, undefined)
 		nextCallback();
