@@ -297,6 +297,46 @@ describe('Module zibase', function() {
 	});
     });
 
+    describe('#processZibaseData(response)', function () {
+	beforeEach("Initialize a fake zibase", function () {
+	    // fake a zibase
+	    initFakeZibase();
+	});
+	beforeEach("Load zibase descriptors", function (done) {
+	    ziBase.loadDescriptors(function (err) {
+		assert.equal(err, null);
+		done(err);
+	    });
+	});
+	it('should replace P4 by P4 (name) in response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "ZWave warning: ERR_P4"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
+	});
+	it('should replace id_OFF by id_OFF (name) in response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "Sent radio ID (1 Burst(s), Protocols='Family http' ): P4_OFF"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message + " (Garage)");
+	});
+	it('should replace <rf>ZWAVE id<rf> by name id (name) in response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "Received radio ID (<rf>ZWAVE P4</rf> <dev>Low-Power Measure</dev> Total Energy=<kwh>39.8</kwh>kWh Power=<w>00</w>W Batt=<bat>Ok</bat>): <id>PZP4</id>"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message.replace(/ P4/g, " P4 (Garage)"));
+	});
+    });
+
     describe('#getVariable(var, cb)', function () {
 	it('should return an int value', function (done) {
 	    if (validZibaseUnreachable) {
