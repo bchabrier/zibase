@@ -219,7 +219,7 @@ describe('Module zibase', function() {
 	    });
 	    ziBase.processZiBaseData(response);
 	});
-	it('should emit a "error" event when ZWAVE error occurs', function (done) {
+	it('should emit an "error" event when ZWAVE error occurs', function (done) {
 	    var test_message="ZWave warning - Device ZA8 is unreachable! : ERR_ZA8";
 
 	    var response = {
@@ -229,6 +229,20 @@ describe('Module zibase', function() {
 	    ziBase.on("error", "ZA8", function(msg) {
 		assert.equal(msg.value, "ERR");
 		assert.equal(msg.id, "ZA8");
+		done();
+	    });
+	    ziBase.processZiBaseData(response);
+	});
+	it('should emit an "error" event when ZWAVE device unknown', function (done) {
+	    var test_message="ZWave warning -  Device ZP16 is unknown!";
+
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : test_message
+	    }
+	    ziBase.on("error", "ZP16", function(msg) {
+		assert.equal(msg.value, "ERR");
+		assert.equal(msg.id, "ZP16");
 		done();
 	    });
 	    ziBase.processZiBaseData(response);

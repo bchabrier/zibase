@@ -490,7 +490,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    var msg;
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
-		infos.id = match[3];
+		infos.id = match[2];
 		infos.value = "ERR";
 		logger.debug(infos);
 		logger.debug(match);
