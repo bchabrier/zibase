@@ -456,7 +456,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    }
 	}
 	//ZWave warning - Device ZA8 is unreachable! : ERR_ZA8
-	else if (/ZWave warning/.test(response.message)) {
+	else if (/ZWave warning.*ERR_/.test(response.message)) {
 	    var re = /([^:]+:\s*)(ERR_([^_]+))/;
 	    var msg;
 	    if (( match = re.exec(response.message)) != null) {
@@ -469,6 +469,35 @@ ZiBase.prototype.processZiBaseData = function(response) {
 			      response.message, 
 			      match[0], // entire string
 			      match[3], // ID
+			      match[1], // start
+			      match[2], // "ID modified" to be replaced by "ID modified (name)"
+			      "" // end
+			     );
+	    } else {
+		msg=response.message;
+		logger.error("Error, regexp " + re +  " not found in response.message!");
+	    }
+	    
+	    logger.info(msg);
+	    this.emitEvent("message", {message: msg, raw_message: response.message});
+	    if (infos.id != undefined) {
+		this.emitEvent("error", infos.id, infos)
+	    }
+	}
+	// ZWave warning -  Device ZP16 is unknown!
+	else if (/ZWave warning.*unknown/.test(response.message)) {
+	    var re = /(.*Device\s*)(Z[A-Z][0-9]+)/;
+	    var msg;
+	    if (( match = re.exec(response.message)) != null) {
+		logger.trace(match);
+		infos.id = match[3];
+		infos.value = "ERR";
+		logger.debug(infos);
+		logger.debug(match);
+		msg=replaceid(this, 
+			      response.message, 
+			      match[0], // entire string
+			      match[2], // ID
 			      match[1], // start
 			      match[2], // "ID modified" to be replaced by "ID modified (name)"
 			      "" // end
