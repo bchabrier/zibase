@@ -358,6 +358,24 @@ describe('Module zibase', function() {
 	    ziBase.processZiBaseData(response);
 	    assert.equal(zibase.test_logger_data.message, response.message.replace(/ P4/g, " P4 (Garage)"));
 	});
+	it('should put name in Launch scenario response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "Launch SCENARIO: 16 (triggered by TIMER)"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message.replace(/16/g, "16 (Notification iOS)"));
+	});
+	it('should put name in Completed scenario response', function () {
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : "Completed SCENARIO: 16"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	    assert.equal(zibase.test_logger_data.message, response.message.replace(/16/g, "16 (Notification iOS)"));
+	});
     });
 
     describe('#getVariable(var, cb)', function () {
@@ -522,8 +540,6 @@ describe('Module zibase', function() {
 	    });
 	});
     });
-
-
 
     describe('Run examples', function() {
 	var exampleDir = "../zibase_examples";
