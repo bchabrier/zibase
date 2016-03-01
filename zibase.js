@@ -830,6 +830,8 @@ ZiBase.prototype.deregisterListener = function() {
 ZiBase.prototype.getState = function(address, callback) {
     logger.trace("getState", address);
 
+    var description = "getState(" + address + ")";
+
     var isZWave = false;
     if (address.length > 1) {
 	address = address.toUpperCase();
@@ -839,7 +841,7 @@ ZiBase.prototype.getState = function(address, callback) {
 	}
     }
     if (address.length > 1) {
-	var request = new ZbRequest("getState(" + address + ")");
+	var request = new ZbRequest(description);
 	request.command = 11;
 	request.param1 = 5;
 	request.param3 = 4;
