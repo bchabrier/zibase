@@ -25,6 +25,7 @@
     "url": "https://github.com/bchabrier/zibase/issues"
   },
   "homepage": "https://github.com/bchabrier/zibase#readme",
+  "tonicExample": "var zibase=require('zibase');\nvar zb=new zibase.ZiBase('0.0.0.0', 'ZiBASE005748', '1821ffcf5a', function(err) {\n    console.log('Descriptors loaded:', zb.descriptors);\n});",
   "dependencies": {
     "request": "*",
     "tracer": "*",
