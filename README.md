@@ -49,8 +49,11 @@ var Zibase = new zibase.ZiBase(
                    zibaseIP,
                    deviceId,
                    token,
-                   function () {
-                       console.log("Connection established.");
+                   function (err) {
+                       if (err)
+                           console.log(err);
+		       else
+                           console.log("Connection established.");
                    });
 ```
 

@@ -137,6 +137,13 @@ describe('Module zibase', function() {
 		}
 	    }
 	});
+	it('should raise an error if zibase unreachable', function (done) {
+	    releasePreviousZibase();
+	    initUnreachableZibase(function(error) {
+		assert.notEqual(error, null);
+		done();
+	    });
+	});
     });
 
     describe('#getDescriptor(id)', function () {
@@ -169,7 +176,10 @@ describe('Module zibase', function() {
     describe('#on(event, id, callback)', function () {
 	beforeEach("Initialize the demo zibase", function (done) {
 	    // use the demo zibase
-	    initDemoZibase(done);
+	    initDemoZibase(function (error) {
+		assert.equal(error, null); 
+		done(error);
+	    });
 	});
 
 	it('should emit a "message" event on each message', function (done) {
@@ -387,7 +397,7 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    initValidZibase(function() {
+	    initValidZibase(function(error) {
 		ziBase.getVariable(16, function(err, value) {
 		    if (err) {
 			done(err);
@@ -400,7 +410,8 @@ describe('Module zibase', function() {
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    initUnreachableZibase(function() {
+	    initUnreachableZibase(function(error) {
+		assert.notEqual(error, null);
 		ziBase.getVariable(16, function(err, value) {
 		    if (err) 
 			done();
@@ -420,7 +431,7 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    initValidZibase(function() {
+	    initValidZibase(function(error) {
 		ziBase.getState("ZB5", function(err, value) {
 		    if (err) {
 			done(err);
@@ -433,7 +444,8 @@ describe('Module zibase', function() {
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    initUnreachableZibase(function() {
+	    initUnreachableZibase(function(error) {
+		assert.notEqual(error, null);
 		ziBase.getState("ZB5", function(err, value) {
 		    if (err) 
 			done();
@@ -454,7 +466,7 @@ describe('Module zibase', function() {
 	    }
 	    this.timeout(20000);
 	    var target="P16";
-	    initValidZibase(function() {
+	    initValidZibase(function(error) {
 		ziBase.on("message", function(msg) {
 		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
 
@@ -474,7 +486,7 @@ describe('Module zibase', function() {
 	    }
 	    this.timeout(20000);
 	    var target="ZP16";
-	    initValidZibase(function() {
+	    initValidZibase(function(error) {
 		ziBase.on("message", function(msg) {
 		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
 
@@ -487,7 +499,11 @@ describe('Module zibase', function() {
 	});
 	it('should reject invalid IDs', function (done) {
 	    var target="P16";
-	    initDemoZibase(function() {
+	    initDemoZibase(function(error) {
+		if (error) {
+		    done(error);
+		    return;
+		}
 		assert.throws(function() {
 		    ziBase.sendCommand("A0", zibase.ZbAction.ON);
 		}, Error);
@@ -514,7 +530,7 @@ describe('Module zibase', function() {
 		return;
 	    }
 	    this.timeout(20000);
-	    initValidZibase(function() {
+	    initValidZibase(function(error) {
 		ziBase.getSensorInfo("OS439157539", function(err, value) {
 		    if (err) {
 			done(err);
@@ -530,7 +546,8 @@ describe('Module zibase', function() {
 	});
 	it('should return an error if not reachable', function (done) {
 	    this.timeout(20000);
-	    initUnreachableZibase(function() {
+	    initUnreachableZibase(function(error) {
+		assert.notEqual(error, null);
 		ziBase.getSensorInfo("OS439157539", function(err, value) {
 		    if (err) 
 			done();

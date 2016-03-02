@@ -246,8 +246,8 @@ function ZiBase(ipAddr, deviceId, token, callback) {
     var self = this;
     this.loadDescriptors(function(err) {
 	self.listenToZiBase(self.processZiBaseData);
-	if (callback != null) 
-	    callback();
+	if (callback) 
+	    callback(err);
     });
 }
 
@@ -265,6 +265,14 @@ ZiBase.prototype.loadDescriptors = function(cb) {
     var self = this;
     request.get("https://zibase.net/m/get_xml.php?device=" + this.deviceId + "&token=" + this.token,
 		function(error, response, bodyString) {
+		    if (error) {
+			cb(error);
+			return;
+		    }
+		    if (bodyString == "") {
+			cb(new Error("Cannot load descriptors, empty response from https://zibase.net/m/get_xml.php?device=XXX&token=XXX"));
+			return;
+		    }
 		    var re = /<([m|e])\s+([^>]*)>\s*<n>([^<]*)<\/n>\s*<\/[m|e]>/g;
 
 		    var match;
