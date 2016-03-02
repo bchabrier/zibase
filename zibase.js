@@ -591,19 +591,32 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 	withResponse = true
     }
 
-    var socket = dgram.createSocket('udp4');
     var self = this;
 
-    pushRequest(function() {
+    pushRequest(function executeRequest () {
+	var socket = dgram.createSocket('udp4');
+
+	var time_sent; // time at which request is sent
+	var time_received; // time at which response is received
 	if (withResponse) {
 	    var t = setTimeout(function() {
 		var address = socket.address();
-		var err = new Error("socket timeout while waiting for response on " + socket.address().port + ", request was: '" + request.description + "'.");
 		socket.close();
-		callback(err, undefined)
+
+		if (!request.inRetryMode) {
+		    request.inRetryMode = true;
+		    logger.warn("socket timeout for request '" + request.description + "'. Retrying...");
+//		    nextCallback(); // unpile the current call
+		    // and try again
+//		    self.sendRequest(request, withResponse, callback);
+		    executeRequest();
+		} else {
+		    var err = new Error("socket timeout while waiting for response on " + address.port + ", request was: '" + request.description + "'.");
+		    callback(err, undefined)
+		}
 		nextCallback();
-	    }, 10000);
-	    // 10 seconds
+	    }, 5 * 1000);
+	    // 5 seconds x 2 retries = 10 s
 
 	    socket.on("message", function(msg, rinfo) {
 		clearTimeout(t);
@@ -612,8 +625,9 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 
 		var response = null;
 		if (msg.length > 0) {
+		    time_received = new Date();
 		    response = new ZbResponse(msg);
-		    logger.trace("response=", response)
+		    logger.trace("response to request '" + request.description + "' received after " + ((time_received - time_sent)/1000) + "s=", response)
 		    callback(null, response);
 		}
 		logger.debug("socket closing " + socket.address().port);
@@ -635,6 +649,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 	}
 
 	var buffer = request.toBinaryArray();
+	time_sent = new Date();
 	socket.send(buffer, 0, buffer.length, self.port, self.ip, function(err, bytes) {
 	    logger.trace("buffer.length=", buffer.length);
 	    logger.trace("err=", err);
