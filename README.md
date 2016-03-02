@@ -52,7 +52,7 @@ var Zibase = new zibase.ZiBase(
                    function (err) {
                        if (err)
                            console.log(err);
-		       else
+                       else
                            console.log("Connection established.");
                    });
 ```
