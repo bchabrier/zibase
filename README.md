@@ -28,7 +28,7 @@ Usage
 Use as a npm module:
 
 ```javascript
-var zibase=require('zibase');
+var zibase = require('zibase');
 ```
 
 Connection to a Zibase
