@@ -1028,3 +1028,14 @@ ZiBase.prototype.listenToZiBase = function(processDataMethod) {
 
 };
 
+ZiBase.prototype.executeRemote = function(id, action)
+{
+    request.get("https://zibase.net/api/get/ZAPI.php?zibase=" + this.deviceId + "&token=" + this.token + "&service=execute&target=remote&id=" + id + "&action=" + action,
+		function(error, response, bodyString) {
+		    if (error)
+			logger.error(error);
+		    if (!/"head" : "success"/.test(bodyString)) {
+			logger.error("executeRemote(" + id + ") failed. Response=" + bodyString);
+		    }
+		});
+}
