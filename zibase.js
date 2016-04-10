@@ -726,17 +726,37 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
 
 /**
  * Asks the zibase to run the scenario specified by its number
- * @param {int} numScenario the scenario number
+ * @param {int|string} scenario the scenario number or name
+ * @returns {boolean} false if scenario doesn't resolve to a scenario number
  */
-ZiBase.prototype.runScenario = function(numScenario) {
-    logger.info("runScenario", numScenario);
-    var request = new ZbRequest("runScenario(" + numScenario + ")");
+ZiBase.prototype.runScenario = function(scenario) {
+    logger.info("runScenario", scenario);
+    var request = new ZbRequest("runScenario(" + scenario + ")");
     request.command = 11;
     request.param1 = 1;
+    var numScenario;
+    if (typeof scenario == 'number') {
+	numScenario = scenario;
+    } else {
+	for (var d in this.descriptors) {
+	    if (this.descriptors[d].type == "scenario" &&
+		this.descriptors[d].name == scenario) {
+		numScenario = parseInt(this.descriptors[d].id);
+		break;
+	    }
+	}
+    }
+    if (typeof numScenario != 'number') {
+	logger.error("Error: unknown scenario '" +
+		     JSON.stringify(scenario) +
+		     "'. Maybe the scenario is not visible in Zibase?");
+	return false;
+    }
     request.param2 = numScenario;
     this.sendRequest(request, true, function(response) {
 	logger.info("response from Zibase = ", response);
     });
+    return true;
 }
 
 /**
@@ -896,66 +916,71 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
     var typeSensor = idSensor.substring(0, 2);
     var numberSensor = idSensor.substring(2, 10000);
     var zibaseIP = this.ip;
-    var retries = 10;
+    var retries = 30;
     var self = this;
 
-    request.get("http://" + zibaseIP + "/sensors.xml", {timeout: 10000}, function(err, response, bodyString) {
+    function getAndProcess () {
+
+	request.get("http://" + zibaseIP + "/sensors.xml", {timeout: 1000}, function(err, response, bodyString) {
 	
-	if (err) {
-	    if (retries == 0) {
-		logger.error(err);
+	    if (err) {
+		if (retries == 0) {
+		    logger.error(err);
+		    callback(err);
+		} else {
+		    retries--;
+		    getAndProcess();
+		}
+		return;
+	    }
+	    var re = new RegExp('<ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
+	    var match;
+	    if (( match = re.exec(bodyString)) != undefined) {
+		for ( i = 1; i < match.length; i++) {
+		    var to = match[i];
+		    logger.trace(to);
+		}
+		var type = match[1];
+		//			var pro = match[2];
+		//			var id = match[3];
+		var gmt = match[2];
+		var v1 = match[3];
+		var v2 = match[4];
+		var lowbat = match[5];
+		
+		// create a new javascript Date object based on the timestamp
+		// multiplied by 1000 so that the argument is in milliseconds, not seconds
+		var date = new Date(gmt * 1000);
+		// hours part from the timestamp
+		var hours = date.getHours();
+		// minutes part from the timestamp
+		var minutes = date.getMinutes();
+		// seconds part from the timestamp
+		var seconds = date.getSeconds();
+		
+		logger.trace("date=", date);
+		logger.trace("v1=", v1);
+		logger.trace("v2=", v2);
+
+		var results = new Object
+		results.date = date
+		results.v1 = v1
+		results.v2 = v2
+
+		callback(null, results);
+		
 	    } else {
-		retries--;
-		self.getSensorInfo(idSensor, callback);
+		// found nothing
+		callback(new Error("idSensor '" + idSensor + "' not found in http://" + zibaseIP + "/sensors.xml"), {
+		    date : null,
+		    v1 : 0,
+		    v2 : 0
+		});
 	    }
-	    return;
-	}
-	var re = new RegExp('<ev type="([^"]*)" +pro="' + typeSensor + '" +id="' + numberSensor + '" +gmt="([^"]*)" +v1="([^"]*)" +v2="([^"]*)" +lowbatt="([^"]*)"/>', "g");
-	var match;
-	if (( match = re.exec(bodyString)) != undefined) {
-	    for ( i = 1; i < match.length; i++) {
-		var to = match[i];
-		logger.trace(to);
-	    }
-	    var type = match[1];
-	    //			var pro = match[2];
-	    //			var id = match[3];
-	    var gmt = match[2];
-	    var v1 = match[3];
-	    var v2 = match[4];
-	    var lowbat = match[5];
+	});
+    }
 
-	    // create a new javascript Date object based on the timestamp
-	    // multiplied by 1000 so that the argument is in milliseconds, not seconds
-	    var date = new Date(gmt * 1000);
-	    // hours part from the timestamp
-	    var hours = date.getHours();
-	    // minutes part from the timestamp
-	    var minutes = date.getMinutes();
-	    // seconds part from the timestamp
-	    var seconds = date.getSeconds();
-
-	    logger.trace("date=", date);
-	    logger.trace("v1=", v1);
-	    logger.trace("v2=", v2);
-
-	    var results = new Object
-	    results.date = date
-	    results.v1 = v1
-	    results.v2 = v2
-
-	    callback(null, results);
-
-	} else {
-	    // found nothing
-	    callback(new Error("idSensor '" + idSensor + "' not found in http://" + zibaseIP + "/sensors.xml"), {
-		date : null,
-		v1 : 0,
-		v2 : 0
-	    });
-	}
-
-    });
+    getAndProcess();
 };
 
 function ip2long(IP) {

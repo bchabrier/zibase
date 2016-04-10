@@ -567,6 +567,33 @@ describe('Module zibase', function() {
 	});
     });
 
+    describe('#runScenario(scenario)', function () {
+	it('should return false if scenario not resolving to number', function (done) {
+	    initDemoZibase(function(error) {
+		var ret;
+		ret = ziBase.runScenario("unknown scenario");
+		assert.equal(ret, false);
+		ret = ziBase.runScenario({ "unknown scenario":"fake" });
+		assert.equal(ret, false);
+		ret = ziBase.runScenario([ "unknown scenario" ]);
+		assert.equal(ret, false);
+		ret = ziBase.runScenario(function () {});
+		assert.equal(ret, false);
+		done();
+	    });
+	});
+
+    	it('should return true if scenario resolves to number', function (done) {
+	    initDemoZibase(function(error) {
+		var ret;
+		ret = ziBase.runScenario(5);
+		assert.equal(ret, true);
+		done();
+	    });
+	});
+
+    });
+
     describe('Run examples', function() {
 	var exampleDir = "../zibase_examples";
 
