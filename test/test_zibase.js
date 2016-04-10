@@ -538,7 +538,7 @@ describe('Module zibase', function() {
 		done();
 		return;
 	    }
-	    this.timeout(20000);
+	    this.timeout(35000);
 	    initValidZibase(function(error) {
 		ziBase.getSensorInfo("OS439157539", function(err, value) {
 		    if (err) {
@@ -554,7 +554,7 @@ describe('Module zibase', function() {
 	    });
 	});
 	it('should return an error if not reachable', function (done) {
-	    this.timeout(20000);
+	    this.timeout(35000);
 	    initUnreachableZibase(function(error) {
 		assert.notEqual(error, null);
 		ziBase.getSensorInfo("OS439157539", function(err, value) {
