@@ -1046,6 +1046,7 @@ ZiBase.prototype.listenToZiBase = function(processDataMethod) {
 	    self.registerListener(address.port);
 	} else {
 	    socket.close();
+	    self.socket = undefined;
 	}
     });
 
