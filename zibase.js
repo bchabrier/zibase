@@ -916,20 +916,31 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
     var typeSensor = idSensor.substring(0, 2);
     var numberSensor = idSensor.substring(2, 10000);
     var zibaseIP = this.ip;
-    var retries = 30;
     var self = this;
+
+    var singleTimeout = 1000; // timeout of a single request
+
+    var timeout = 15000; // global timeout
+    var start = Date.now();
 
     function getAndProcess () {
 
-	request.get("http://" + zibaseIP + "/sensors.xml", {timeout: 1000}, function(err, response, bodyString) {
+	var singleStart = Date.now();
+	request.get("http://" + zibaseIP + "/sensors.xml", {timeout: singleTimeout}, function(err, response, bodyString) {
 	
 	    if (err) {
-		if (retries == 0) {
+		if (Date.now() - start > timeout) {
 		    logger.error(err);
 		    callback(err);
 		} else {
-		    retries--;
-		    getAndProcess();
+		    var delay = singleTimeout - (Date.now() - singleStart);
+		    if (delay <= 0) {
+			getAndProcess();
+		    } else {
+			setTimeout(function () {
+			    getAndProcess();
+			}, delay);
+		    }
 		}
 		return;
 	    }
