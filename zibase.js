@@ -382,7 +382,8 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 		infos.id = match[3];
-		infos.value = (match[4] == undefined) ? "ON" : "OFF"
+		infos.value = (match[4] == undefined) ? "ON" : "OFF";
+		infos.dev = 'CMD/INTER';
 	    }
 	    var msg =replaceid(this, 
 				  response.message, 
