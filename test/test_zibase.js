@@ -619,6 +619,29 @@ describe('Module zibase', function() {
 
     });
 
+    describe('#setEvent(action, address)', function () {
+      it('should always return', function (done) {
+	    initDemoZibase(function(error) {
+	      ziBase.setEvent(zibase.ZbAction.ON, 'A4');
+	      ziBase.setEvent(zibase.ZbAction.OFF, 'A4');
+	      ziBase.setEvent(zibase.ZbAction.ON, 'ZP20');
+	      ziBase.setEvent(zibase.ZbAction.OFF, 'ZP20');
+	      ziBase.setEvent(zibase.ZbAction.BRIGHT, 'ZP20');
+		done();
+	    });
+	});
+
+    	it('should return true if scenario resolves to number', function (done) {
+	    initDemoZibase(function(error) {
+		var ret;
+		ret = ziBase.runScenario(5);
+		assert.equal(ret, true);
+		done();
+	    });
+	});
+
+    });
+
     describe('Run examples', function() {
 	var exampleDir = "../zibase_examples";
 
