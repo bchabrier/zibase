@@ -284,6 +284,7 @@ ZiBase.prototype.loadDescriptors = function(cb) {
 			switch(type) {
 			case 'e': desc.type = "device"; break;
 			case 'm': desc.type = "scenario"; break;
+			  /* istanbul ignore next */
 			default: desc.type = ""; 
 			    logger.error("unexpected type '" + type + "' from zibase descriptors, 'e' or 'm' expected.");
 			    break;
@@ -465,7 +466,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    }
 	}
 	//ZWave warning - Device ZA8 is unreachable! : ERR_ZA8
-	else if (/ZWave warning.*ERR_/.test(response.message)) {
+	else /* istanbul ignore else */ if (/ZWave warning.*ERR_/.test(response.message)) {
 	    var re = /([^:]+:\s*)(ERR_([^_]+))/;
 	    var msg;
 	    if (( match = re.exec(response.message)) != null) {
@@ -482,7 +483,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 			      match[2], // "ID modified" to be replaced by "ID modified (name)"
 			      "" // end
 			     );
-	    } else /* istanbul ignore next: will never pass here */ {
+	    } else {
 		msg=response.message;
 		logger.error("Error, regexp " + re +  " not found in response.message!");
 	    }
