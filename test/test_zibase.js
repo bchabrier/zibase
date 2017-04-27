@@ -411,6 +411,15 @@ describe('Module zibase', function() {
 	    ziBase.processZiBaseData(response);
 	    assert.equal(zibase.test_logger_data.message, response.message.replace(/16/g, "16 (Notification iOS)"));
 	});
+	it('should log a message if unsupported data', function () {
+	    var response = {
+		reserved1 : "UNSUPPORTEDMSG",
+		message : "This message is unsupported"
+	    }
+	    zibase.test_logger = true;
+	    ziBase.processZiBaseData(response);
+	  assert.equal(zibase.test_logger_data.message, "Unsupported response: { reserved1: 'UNSUPPORTEDMSG',\n  message: 'This message is unsupported' }");
+	});
     });
 
     describe('#getVariable(var, cb)', function () {
