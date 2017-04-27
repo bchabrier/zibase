@@ -482,7 +482,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 			      match[2], // "ID modified" to be replaced by "ID modified (name)"
 			      "" // end
 			     );
-	    } else {
+	    } else /* istanbul ignore next: will never pass here */ {
 		msg=response.message;
 		logger.error("Error, regexp " + re +  " not found in response.message!");
 	    }
