@@ -245,7 +245,8 @@ function ZiBase(ipAddr, deviceId, token, callback) {
 
     var self = this;
     this.loadDescriptors(function(err) {
-	self.listenToZiBase(self.processZiBaseData);
+      self.listenToZiBase(self.processZiBaseData);
+      /* istanbul ignore else */
 	if (callback) 
 	    callback(err);
     });
@@ -328,9 +329,11 @@ ZiBase.prototype.getDescriptor = function(id)
  * @param {function} callback Callback to be called when the event is triggered. The parameters of the callback depend on the event
  */
 ZiBase.prototype.on = function(event, id, callback) {
+  /* istanbul ignore else */
     if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
 	event = event + ":" + id
     }
+      /* istanbul ignore else */
     if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
 	callback = id
     }
@@ -345,10 +348,12 @@ ZiBase.prototype.on = function(event, id, callback) {
  * @param {function} callback Callback to be called when the event is triggered. The parameters of the callback depend on the event
  */
 ZiBase.prototype.once = function(event, id, callback) {
+      /* istanbul ignore else */
     if (( typeof event === 'string') && ( typeof id === 'string') && ( typeof callback === 'function')) {
 	// normal call
 	event = event + ":" + id
     }
+      /* istanbul ignore else */
     if (( typeof event === 'string') && ( typeof id === 'function') && ( typeof callback === 'undefined')) {
 	callback = id
     }
@@ -368,8 +373,10 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	function replaceid(zb, message, entire_string, id, before, id_modified, after){
 	    var name;
 	    var desc = zb.descriptorsByID[id];
+	  /* istanbul ignore else */
 	    if (desc != undefined)
 		name = desc.name;
+      /* istanbul ignore else */
 	    if (name != undefined) {
 		return message.replace(entire_string, before+id_modified+" ("+name+")"+after);
 	    }
@@ -398,6 +405,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    this.emitEvent("message", {message: msg, raw_message: response.message});
 
 	    logger.trace("infos=", infos)
+      /* istanbul ignore else */
   	    if (infos.id != undefined) {
 		this.emitEvent("change", infos.id, infos)
 	    }
@@ -419,6 +427,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 				  "</id>" // end
 				 );
 	    re = /(<rf>ZWAVE )([^<]+)(<\/rf>)/;
+      /* istanbul ignore else */
 	    if ((match = re.exec(trace)) != null) {
 		trace = replaceid(this, 
 				  trace, 
@@ -432,6 +441,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    logger.info(trace);
 	    this.emitEvent("message", {message: trace, raw_message: response.reserved1});
 	    logger.trace("infos=", infos)
+      /* istanbul ignore else */
 	    if (infos.id != undefined) {
 		this.emitEvent("change", infos.id, infos)
 	    }
@@ -461,6 +471,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 		}
 	    this.emitEvent("message", {message: msg, raw_message: response.message});
 	    logger.trace("infos=", infos)
+      /* istanbul ignore else */
 	    if (infos.id != undefined) {
 		this.emitEvent("change", infos.id, infos)
 	    }
@@ -490,6 +501,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    
 	    logger.info(msg);
 	    this.emitEvent("message", {message: msg, raw_message: response.message});
+      /* istanbul ignore else */
 	    if (infos.id != undefined) {
 		this.emitEvent("error", infos.id, infos)
 	    }
@@ -519,6 +531,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    
 	    logger.info(msg);
 	    this.emitEvent("message", {message: msg, raw_message: response.message});
+      /* istanbul ignore else */
 	    if (infos.id != undefined) {
 		this.emitEvent("error", infos.id, infos)
 	    }
@@ -526,6 +539,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	// Completed SCENARIO: 45
 	else if (/(Completed|Launch) SCENARIO:/.test(response.message)) {
 	    var re = /(SCENARIO: )([0-9]+)/;
+      /* istanbul ignore else */
 	    if (( match = re.exec(response.message)) != null) {
 		logger.trace(match);
 	    }
@@ -568,6 +582,7 @@ function nextCallback() {
     // removing previous request, which has been handled
     messageQueue.shift();
     // check if still a message to process
+      /* istanbul ignore else */
     if (messageQueue.length > 0) {
 	logger.debug("queue not empty; processing")
 	var callback = messageQueue[0];
@@ -597,6 +612,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 
     logger.debug('request=', request);
 
+      /* istanbul ignore else */
     if (withResponse == undefined) {
 	withResponse = true
     }
@@ -634,6 +650,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 		logger.trace("socket got: " + msg + " from " + rinfo.address + ":" + rinfo.port);
 
 		var response = null;
+      /* istanbul ignore else */
 		if (msg.length > 0) {
 		    time_received = new Date();
 		    response = new ZbResponse(msg);
@@ -665,6 +682,7 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
 	    logger.trace("err=", err);
 	    logger.trace("bytes=", bytes);
 	    logger.trace("fin");
+      /* istanbul ignore else */
 	    if (!withResponse) {
 		logger.debug("socket closing " + socket.address().port);
 		socket.close();
@@ -684,18 +702,22 @@ ZiBase.prototype.sendRequest = function(request, withResponse, callback) {
  */
 ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbBurst) {
     logger.debug("params:", address, action, protocol, dimLevel, nbBurst)
+      /* istanbul ignore else */
     if (protocol == undefined) {
 	protocol = ZbProtocol.PRESET
     }
+      /* istanbul ignore else */
     if (dimLevel == undefined) {
 	dimLevel = 0
     }
+      /* istanbul ignore else */
     if (nbBurst == undefined) {
 	nbBurst = 1
     }
     var description = "sendCommand(" + address + " " + action + "...)" ;
     if (/^[zZ]?[a-pA-P]([1-9]|1[0-6])$/.test(address)) {
 	address = address.toUpperCase();
+      /* istanbul ignore else */
 	if (address[0] == "Z") {
 	    address = address.substr(1);
 	    protocol = ZbProtocol.ZWAVE;
@@ -704,14 +726,17 @@ ZiBase.prototype.sendCommand = function(address, action, protocol, dimLevel, nbB
 	var request = new ZbRequest(description);
 	request.command = 11;
 
+      /* istanbul ignore else */
 	if (action == ZbAction.DIM_BRIGHT && dimLevel == 0)
 	    action = ZbAction.OFF;
 
 	request.param2 = action;
 	logger.debug("action = ", action)
 	request.param2 |= (protocol & 0xFF) << 0x08;
+      /* istanbul ignore else */
 	if (action == ZbAction.DIM_BRIGHT)
 	    request.param2 |= (dimLevel & 0xFF) << 0x10;
+      /* istanbul ignore else */
 	if (nbBurst > 1)
 	    request.param2 |= (nbBurst & 0xFF) << 0x18;
 
@@ -741,6 +766,7 @@ ZiBase.prototype.runScenario = function(scenario) {
 	numScenario = scenario;
     } else {
 	for (var d in this.descriptors) {
+      /* istanbul ignore else */
 	    if (this.descriptors[d].type == "scenario" &&
 		this.descriptors[d].name == scenario) {
 		numScenario = parseInt(this.descriptors[d].id);
@@ -748,6 +774,7 @@ ZiBase.prototype.runScenario = function(scenario) {
 	    }
 	}
     }
+      /* istanbul ignore else */
     if (typeof numScenario != 'number') {
 	logger.error("Error: unknown scenario '" +
 		     JSON.stringify(scenario) +
@@ -774,13 +801,16 @@ ZiBase.prototype.setEvent = function(action, address) {
     request.param2 = action;
 
     var ev_type;
+      /* istanbul ignore else */
     if (action == 0) {
 	ev_type = 9
     }
+      /* istanbul ignore else */
     if (action == 1 || action == 2) {
 	ev_type = 4
     }
     var protocol;
+      /* istanbul ignore else */
     if (address.length > 1) {
 	address = address.toUpperCase();
 	if (address[0] == "Z") {
@@ -795,6 +825,7 @@ ZiBase.prototype.setEvent = function(action, address) {
 
     request.param3 = id;
 
+      /* istanbul ignore else */
     if (protocol == ZbProtocol.ZWAVE) {
 	if (ev_type == 4)
 	    ev_type = 19
@@ -854,6 +885,7 @@ ZiBase.prototype.registerListener = function(port) {
 ZiBase.prototype.deregisterListener = function() {
     logger.debug("deregisterListener", this.myip, this.localport);
     this.deregistered = true;
+      /* istanbul ignore else */
     if (this.socket != undefined) {
 	this.socket.close();
 	this.socket = undefined;
@@ -878,13 +910,16 @@ ZiBase.prototype.getState = function(address, callback) {
     var description = "getState(" + address + ")";
 
     var isZWave = false;
+      /* istanbul ignore else */
     if (address.length > 1) {
 	address = address.toUpperCase();
+      /* istanbul ignore else */
 	if (address[0] == "Z") {
 	    isZWave = true;
 	    address = address.substr(1);
 	}
     }
+      /* istanbul ignore else */
     if (address.length > 1) {
 	var request = new ZbRequest(description);
 	request.command = 11;
@@ -897,6 +932,7 @@ ZiBase.prototype.getState = function(address, callback) {
 	request.param4 |= (houseCode & 0x0F) << 0x04;
 
 	// Pour le zwave, il faut mettre le 9e bit à 1
+      /* istanbul ignore else */
 	if (isZWave)
 	    request.param4 |= 0x0100;
 
@@ -930,6 +966,7 @@ ZiBase.prototype.getSensorInfo = function(idSensor, callback) {
 	var singleStart = Date.now();
 	request.get("http://" + zibaseIP + "/sensors.xml", {timeout: singleTimeout}, function(err, response, bodyString) {
 	
+      /* istanbul ignore else */
 	    if (err) {
 		if (Date.now() - start > timeout) {
 		    logger.error(err);
@@ -1013,6 +1050,7 @@ function ip2long(IP) {
     // PHP allows between 1 (e.g. 127) to 4 (e.g 127.0.0.1) components.
     IP = IP.match(/^([1-9]\d*|0[0-7]*|0x[\da-f]+)(?:\.([1-9]\d*|0[0-7]*|0x[\da-f]+))?(?:\.([1-9]\d*|0[0-7]*|0x[\da-f]+))?(?:\.([1-9]\d*|0[0-7]*|0x[\da-f]+))?$/i);
     // Verify IP format.
+      /* istanbul ignore else */
     if (!IP) {
 	return false;
 	// Invalid format.
@@ -1028,6 +1066,7 @@ function ip2long(IP) {
     IP.push(256, 256, 256, 256);
     // Recalculate overflow of last component supplied to make up for missing components.
     IP[4 + IP[0]] *= Math.pow(256, 4 - IP[0]);
+      /* istanbul ignore else */
     if (IP[1] >= IP[5] || IP[2] >= IP[6] || IP[3] >= IP[7] || IP[4] >= IP[8]) {
 	return false;
     }
