@@ -282,6 +282,22 @@ describe('Module zibase', function() {
 	  zibase.test_logger = true;
 	  ziBase.processZiBaseData(response);
 	});
+	it('should log a message for unsupported Sent radio ID', function (done) {
+	    var test_message="Sent radio ID - unsupported message";
+
+	    var response = {
+		reserved1 : "TEXTMSG",
+		message : test_message
+	    }
+	    ziBase.on("message", function(msg) {
+	      assert.equal(msg.message, test_message);
+	      assert.equal(zibase.test_logger_data.message, test_message);
+	      done();
+	    });
+
+	  zibase.test_logger = true;
+	  ziBase.processZiBaseData(response);
+	});
 	it('should send a "restart" event on "SLAMSIG"', function (done) {
 	    var response = {
 		reserved1 : "SLAMSIG"
@@ -522,13 +538,13 @@ describe('Module zibase', function() {
 	    var target="ZP16";
 	    initValidZibase(function(error) {
 		ziBase.on("message", function(msg) {
-		    var re=new RegExp("Sent radio ID .*: " + target + "_ON");
+		    var re=new RegExp("Sent radio ID .*: " + target + "_OFF");
 
 		    if (re.test(msg.message)) {
 			done();
 		    }
 		});
-		ziBase.sendCommand(target, zibase.ZbAction.ON);
+		ziBase.sendCommand(target, zibase.ZbAction.OFF);
 	    });
 	});
 	it('should reject invalid IDs', function (done) {
