@@ -266,7 +266,7 @@ describe('Module zibase', function() {
 	    });
 	    ziBase.processZiBaseData(response);
 	});
-	it.only('should log a message for unsupported ZWAVE warning', function (done) {
+	it('should log a message for unsupported ZWAVE warning', function (done) {
 	    var test_message="ZWave warning - unsupported message ending with unknown";
 
 	    var response = {
@@ -275,9 +275,12 @@ describe('Module zibase', function() {
 	    }
 	    ziBase.on("message", function(msg) {
 	      assert.equal(msg.message, test_message);
-		done();
+	      assert.equal(zibase.test_logger_data.message, test_message);
+	      done();
 	    });
-	    ziBase.processZiBaseData(response);
+
+	  zibase.test_logger = true;
+	  ziBase.processZiBaseData(response);
 	});
 	it('should send a "restart" event on "SLAMSIG"', function (done) {
 	    var response = {
