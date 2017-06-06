@@ -1,0 +1,18 @@
+// tsconfig.json
+
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es5",
+    "module": "commonjs",
+    //"allowJs": true,
+    "rootDir": ".",
+    "outDir": "./build"
+  },
+  "exclude" : [
+    "./build",
+    "./node_modules",
+    "./coverage",
+    "./doc"
+  ]
+}
