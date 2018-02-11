@@ -75,8 +75,7 @@ declare namespace zibase {
 
         protected sendRequest(request: ZbRequest, withResponse: boolean, callback: (err: Error, response: ZbResponse) => void): void;
         sendCommand(address: string, action: ZbAction, protocol?: ZbProtocol, dimLevel?: number, nbBurst?: number): void;
-        runScenario(num: number): void;
-        runScenario(label: string): void;
+        runScenario(num: number|string): boolean;
         setEvent(action: ZbAction, address: string): void;
         getVariable(numVar: number, callback: (err: Error, value: string) => void): void;
         getState(address: string, callback: (err: Error, value: string) => void): void;
