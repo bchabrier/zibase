@@ -1,6 +1,6 @@
 {
   "name": "zibase",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A NodeJS API to ZiBase",
   "main": "zibase.js",
   "scripts": {
