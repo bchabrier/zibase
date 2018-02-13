@@ -568,6 +568,7 @@ ZiBase.prototype.processZiBaseData = function(response) {
 	    // then re-listen to zibase
 	    self.deregistered = false;
 	    self.listenToZiBase(self.processZiBaseData);
+			self.emitEvent("restarted");
 	});
     } else {
 	logger.warn("Unsupported response:", response)

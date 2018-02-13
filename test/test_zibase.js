@@ -298,11 +298,22 @@ describe('Module zibase', function() {
 	  zibase.test_logger = true;
 	  ziBase.processZiBaseData(response);
 	});
-	it('should send a "restart" event on "SLAMSIG"', function (done) {
+		it('should send a "restart/restarted" pair of events on "SLAMSIG"', function (done) {
 	    var response = {
 		reserved1 : "SLAMSIG"
 	    }
+			var restartSent = false;
+			var restartedSent = false;
 	    ziBase.on("restart", function() {
+				assert.equal(restartSent, false);
+				assert.equal(restartedSent, false);
+				restartSent = true
+			});
+			ziBase.on("restarted", function () {
+				assert.equal(restartSent, true);
+				assert.equal(restartedSent, false);
+				restartedSent = true;
+				ziBase.deregisterListener();
 		done();
 	    });
 	    ziBase.processZiBaseData(response);
