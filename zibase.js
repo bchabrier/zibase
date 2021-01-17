@@ -264,11 +264,12 @@ ZiBase.prototype.loadDescriptors = function (cb) {
 	this.descriptors = [];
 	this.descriptorsByID = [];
 	var self = this;
+	// zibase.net having been decommissionned, let's not go through it anymore
+	return cb(null);
 	request.get("https://zibase.net/m/get_xml.php?device=" + this.deviceId + "&token=" + this.token,
 		function (error, response, bodyString) {
 			if (error) {
-				cb(error);
-				return;
+				logger.error(error);
 			}
 			if (bodyString == "") {
 				cb(new Error("Cannot load descriptors, empty response from https://zibase.net/m/get_xml.php?device=XXX&token=XXX"));
