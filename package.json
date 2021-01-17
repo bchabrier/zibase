@@ -1,5 +1,6 @@
 {
   "name": "zibase",
+  "author": "Bruno Chabrier",
   "version": "1.4.2",
   "description": "A NodeJS API to ZiBase",
   "main": "zibase.js",
@@ -19,7 +20,6 @@
     "zibase",
     "zapi"
   ],
-  "author": "Bruno Chabrier",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bchabrier/zibase/issues"
@@ -27,17 +27,17 @@
   "homepage": "https://github.com/bchabrier/zibase#readme",
   "tonicExample": "var zibase=require('zibase');\nvar zb=new zibase.ZiBase('0.0.0.0', 'ZiBASE005748', '1821ffcf5a', function(err) {\n    console.log('Descriptors loaded:', zb.descriptors);\n});",
   "dependencies": {
-    "request": ">=2.68.0",
-    "tracer": "*",
-    "ip": "*"
+    "ip": "*",
+    "request": "^2.87.0",
+    "tracer": "^1.0.1"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
-    "diff": "^3.4.0",
-    "gh-pages": "*",
+    "coveralls": "^3.0.2",
+    "diff": "^4.0.1",
+    "gh-pages": "^2.1.1",
     "ink-docstrap": "*",
     "istanbul": "^0.4.2",
-    "mocha": "^5.0.0",
+    "mocha": "^6.2.2",
     "mocha-lcov-reporter": "^1.2.0"
   }
 }
